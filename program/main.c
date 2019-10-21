@@ -14,8 +14,16 @@
 
 int main(){
 	// test print bangunan
+	TabBangunan T;
 	Bangunan B;
-	MakeBangunan(&B, 1, 5, 7);
-	PrintBangunan(B);
+
+	MakeEmpty(&T, 100);
+
+	for(int i=1; i<=10; i++){
+		MakeBangunan(&B, 1, i, 0);
+		TabElmt(T, i) = B;
+	}
+	
+	PrintArrayBangunan(T);
 	return 0;
 }

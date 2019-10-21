@@ -11,7 +11,7 @@
 
 /* ********** KONSTRUKTOR ********** */
 /* Konstruktor : create tabel kosong  */
-void MakeEmpty(TabInt *T, int TabMaxEl){
+void MakeEmpty(TabBangunan *T, int TabMaxEl){
   /* I.S. T sembarang, TabMaxEl > 0 */
   /* F.S. Terbentuk tabel T kosong dengan kapasitas TabMaxEl + 1 */
   /* Proses: Inisialisasi semua elemen tabel T dengan ValUndef */
@@ -22,7 +22,7 @@ void MakeEmpty(TabInt *T, int TabMaxEl){
   }
 }
 
-void TabDealokasi(TabInt *T){
+void TabDealokasi(TabBangunan *T){
   /* I.S. T terdefinisi; */
   /* F.S. TI(T) dikembalikan ke system, TabMaxEl(T)=0; Neff(T)=0 */
   for(int i=IdxMin; i<=TabMaxEl(*T); i++){
@@ -34,7 +34,7 @@ void TabDealokasi(TabInt *T){
 
 /* ********** SELEKTOR (TAMBAHAN) ********** */
 /* *** Banyaknya elemen *** */
-int TabNbElmt(TabInt T){
+int TabNbElmt(TabBangunan T){
   /* Mengirimkan banyaknya elemen efektif tabel */
   /* Mengirimkan nol jika tabel kosong */
   IdxType i;
@@ -49,32 +49,32 @@ int TabNbElmt(TabInt T){
 }
 
 /* *** Daya tampung container *** */
-int MaxElement(TabInt T){
+int MaxElement(TabBangunan T){
   /* Mengirimkan maksimum elemen yang dapat ditampung oleh tabel */
   return TabMaxEl(T);
 }
 
 /* *** Selektor INDEKS *** */
-IdxType GetFirstIdx(TabInt T){
+IdxType GetFirstIdx(TabBangunan T){
   /* Prekondisi : Tabel T tidak kosong */
   /* Mengirimkan indeks elemen T pertama */
   return(IdxMin);
 }
 
-IdxType GetLastIdx(TabInt T){
+IdxType GetLastIdx(TabBangunan T){
   /* Prekondisi : Tabel T tidak kosong */
   /* Mengirimkan indeks elemen T terakhir */
   return TabNbElmt(T)-IdxMin+1;
 }
 
 /* ********** Test Indeks yang valid ********** */
-boolean IsIdxTabValid(TabInt T, IdxType i){
+boolean IsIdxTabValid(TabBangunan T, IdxType i){
   /* Mengirimkan true jika i adalah indeks yang valid utk ukuran tabel */
   /* yaitu antara indeks yang terdefinisi utk container*/
   return (i<=MaxElement(T)) && (i>=IdxMin);
 }
 
-boolean IsIdxTabEff(TabInt T, IdxType i){
+boolean IsIdxTabEff(TabBangunan T, IdxType i){
   /* Mengirimkan true jika i adalah indeks yang terdefinisi utk tabel */
   /* yaitu antara FirstIdx(T)..LastIdx(T) */
   return (i<=GetLastIdx(T)) && (i>=GetFirstIdx(T));
@@ -83,12 +83,23 @@ boolean IsIdxTabEff(TabInt T, IdxType i){
 
 /* ********** TEST KOSONG/PENUH ********** */
 /* *** Test tabel kosong *** */
-boolean IsTabEmpty(TabInt T){
+boolean IsTabEmpty(TabBangunan T){
   /* Mengirimkan true jika tabel T kosong, mengirimkan false jika tidak */
   return (TabNbElmt(T)==0);
 }
 /* *** Test tabel penuh *** */
-boolean IsTabFull(TabInt T){
+boolean IsTabFull(TabBangunan T){
   /* Mengirimkan true jika tabel T penuh, mengirimkan false jika tidak */
   return (TabNbElmt(T)==MaxElement(T));
+}
+
+void PrintArrayBangunan(TabBangunan T){
+  IdxType i;
+
+  for(i=GetFirstIdx(T);i<=(GetLastIdx(T));i++){
+    PrintBangunan(TabElmt(T, i));
+    if(i<(GetLastIdx(T))){
+      printf("\n");
+    }
+  }
 }
