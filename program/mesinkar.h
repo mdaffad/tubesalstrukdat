@@ -18,6 +18,9 @@ void START();
    F.S. : CC adalah karakter pertama pada pita
           Jika CC != MARK maka EOP akan padam (false)
           Jika CC = MARK maka EOP akan menyala (true) */
+/* MODE:
+	0: baca config.txt
+	1: -- */
 
 void ADV();
 /* Pita dimajukan satu karakter.
@@ -25,5 +28,7 @@ void ADV();
    F.S. : CC adalah karakter berikutnya dari CC yang lama,
           CC mungkin = MARK
           Jika  CC = MARK maka EOP akan menyala (true) */
+
+void ADVInput();
 
 #endif

@@ -43,6 +43,117 @@ void MakeBangunan(Bangunan *B, int Tipe, int X, int Y){
 	UpdateToLevel(B, 1);
 }
 
+char Symbol(Bangunan B){
+	/* Mengirimkan karakter simbol yang merepresentasikan bangunan B sesuai tipe:
+		1: Castle (C)
+		2: Tower (T)
+		3: Fort (F)
+		4: Village (V)
+	*/
+
+	switch(Tipe(B)){
+		case 1: {
+			return 'C';
+			break;
+		}
+		case 2: {
+			return 'T';
+			break;
+		}
+		case 3: {
+			return 'F';
+			break;
+		}
+		case 4: {
+			return 'V';
+			break;
+		}
+	}
+}
+
+void PrintNama(Bangunan B){
+	/* Mencetak nama bangunan B sesuai tipe:
+		1: Castle (C)
+		2: Tower (T)
+		3: Fort (F)
+		4: Village (V)
+	*/
+
+	switch(Tipe(B)){
+		case 1: {
+			// CASTLE (C)
+			printf("Castle");
+			break;
+		}
+		case 2: {
+			// TOWER (T)
+			printf("Tower");
+			break;
+		}
+		case 3: {
+			// FORT (F)
+			printf("Fort");
+			break;
+		}
+		case 4: {
+			// VILLAGE (V)
+			printf("Village");
+			break;
+		}
+	}
+}
+
+int CharToTipe(char c){
+	switch(c){
+		case 'C': {
+			return 1;
+			break;
+		}
+		case 'T': {
+			return 2;
+			break;
+		}
+		case 'F': {
+			return 3;
+			break;
+		}
+		case 'V': {
+			return 4;
+			break;
+		}
+	}
+}
+
+Bangunan BUndef(){
+	/* Mengirimkan nilai bangunan undef dengan spesifikasi semua atribut bernilai -1 */
+	Bangunan B;
+	Tipe(B) = -1;
+	Pemilik(B) = -1;
+	Pasukan(B) = -1;
+	Lvl(B) = -1;
+	A(B) = -1;
+	M(B) = -1;
+	P(B) = false;
+	Pos(B) = MakePOINT(-1,-1);
+	return B;
+}
+
+boolean IsBUndef(Bangunan B){
+	/* Mengirimkan true jika bangunan B adalah BUndef */
+	boolean isUndef;
+
+	isUndef = Tipe(B) == -1;
+	isUndef = Pemilik(B) == -1;
+	isUndef = Pasukan(B) == -1;
+	isUndef = Lvl(B) == -1;
+	isUndef = A(B) == -1;
+	isUndef = M(B) == -1;
+	isUndef = P(B) == false;
+	isUndef = PointEQ(Pos(B), MakePOINT(-1,-1));
+	return isUndef;
+}
+
+
 void UpdateToLevel(Bangunan *B, int Lvl){
 	/* I.S. B bisa saja belum terdefinisi sepenuhnya, Tipe B terdefinisi [1,4], Lvl bernilai [1,4] */
 	/* F.S. Mengupdate bangunan menjadi level Lvl sesuai spesifikasi */
@@ -172,61 +283,13 @@ void UpdateToLevel(Bangunan *B, int Lvl){
 	}
 }
 
-char Symbol(Bangunan B){
-	/* Mengirimkan karakter simbol yang merepresentasikan bangunan B sesuai tipe:
-		1: Castle (C)
-		2: Tower (T)
-		3: Fort (F)
-		4: Village (V)
-	*/
-
-	switch(Tipe(B)){
-		case 1: {
-			return 'C';
-			break;
-		}
-		case 2: {
-			return 'T';
-			break;
-		}
-		case 3: {
-			return 'F';
-			break;
-		}
-		case 4: {
-			return 'V';
-			break;
-		}
-	}
+boolean CheckLevelUp(Bangunan B){
+	return (Pasukan(B) >= M(B)/2 && Lvl(B) < 4);
 }
 
-Bangunan BUndef(){
-	/* Mengirimkan nilai bangunan undef dengan spesifikasi semua atribut bernilai -1 */
-	Bangunan B;
-	Tipe(B) = -1;
-	Pemilik(B) = -1;
-	Pasukan(B) = -1;
-	Lvl(B) = -1;
-	A(B) = -1;
-	M(B) = -1;
-	P(B) = false;
-	Pos(B) = MakePOINT(-1,-1);
-	return B;
-}
-
-boolean IsBUndef(Bangunan B){
-	/* Mengirimkan true jika bangunan B adalah BUndef */
-	boolean isUndef;
-
-	isUndef = Tipe(B) == -1;
-	isUndef = Pemilik(B) == -1;
-	isUndef = Pasukan(B) == -1;
-	isUndef = Lvl(B) == -1;
-	isUndef = A(B) == -1;
-	isUndef = M(B) == -1;
-	isUndef = P(B) == false;
-	isUndef = PointEQ(Pos(B), MakePOINT(-1,-1));
-	return isUndef;
+void LevelUp(Bangunan *B){
+	UpdateToLevel(B, Lvl(*B)+1);
+	Pasukan(*B) -= M(*B)/2;
 }
 
 void PrintBangunan(Bangunan B){

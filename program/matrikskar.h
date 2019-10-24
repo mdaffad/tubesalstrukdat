@@ -4,6 +4,8 @@
 #define MATRIKS_H
 
 #include "boolean.h"
+#include "bangunan.h"
+#include "arraydinpos.h"
 
 /* Ukuran minimum dan maksimum baris dan kolom */
 #define BrsMin 1
@@ -49,5 +51,9 @@ indeks GetLastIdxKol (MATRIKS M);
 /* Mengirimkan indeks kolom terbesar M */
 boolean IsMatIdxEff (MATRIKS M, indeks i, indeks j);
 /* Mengirimkan true jika i, j adalah indeks efektif bagi M */
+
+void FillPeta(MATRIKS *M, TabBangunan T);
+
+void PrintPeta(MATRIKS Peta);
 
 #endif

@@ -16,9 +16,12 @@ void START() {
    I.S. : sembarang
    F.S. : CC adalah karakter pertama pada pita. Jika CC != MARK maka EOP akan padam (false).
           Jika CC = MARK maka EOP akan menyala (true) */
+  /* MODE:
+  0: baca config.txt
+  1: -- */
 
     /* Algoritma */
-    pita = fopen("pitakar.txt","r");
+    pita = fopen("config.txt","r"); 
     ADV();
 }
 
@@ -36,4 +39,17 @@ void ADV() {
     if (EOP) {
        fclose(pita);
     }
+}
+
+
+void ADVInput() {
+/* Pita dimajukan satu karakter.
+   I.S. : Karakter pada jendela =
+          CC, CC != EOI
+   F.S. : CC adalah karakter berikutnya dari CC yang lama,
+          CC mungkin = MARK.
+          Jika  CC = MARK maka EOP akan menyala (true) */
+
+    /* Algoritma */
+    retval = scanf("%c",&CC);
 }

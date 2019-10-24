@@ -7,6 +7,8 @@
 #define listlinier_H
 
 #include "boolean.h"
+#include "arraydinpos.h"
+#include "boolean.h"
 
 #define LNil NULL
 
@@ -138,5 +140,9 @@ void Konkat1 (List *L1, List *L2, List *L3);
 /* menghasilkan L3 yang baru (dengan elemen list L1 dan L2) */
 /* dan L1 serta L2 menjadi list kosong.*/
 /* Tidak ada LAlokasi/LDealokasi pada prosedur ini */
+
+void PrintListBangunan(List L, TabBangunan T);
+
+infotype GetAtIdx(List L, int N);
 
 #endif

@@ -5,6 +5,7 @@
 
 #include "listlinier.h"
 #include "boolean.h"
+#include "arraydinpos.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -16,7 +17,7 @@ boolean IsLEmpty (List L){
 }
 
 /****************** PEMBUATAN LIST KOSONG ******************/
-void CreateEmpty (List *L){
+void LCreateEmpty (List *L){
 	/* I.S. sembarang             */
 	/* F.S. Terbentuk list kosong */
 	First(*L) = LNil;
@@ -339,3 +340,42 @@ void Konkat1 (List *L1, List *L2, List *L3){
 	First(*L2) = LNil;
 }
 
+void PrintListBangunan(List L, TabBangunan T){
+	addressL P;
+	int i;
+	Bangunan tmp;
+
+	P = First(L);
+	i = 1;
+	while(P != LNil){
+		tmp = TabElmt(T, Info(P));
+		// printf("%d. ", Info(P));
+		printf("%d. ", i);
+
+		PrintNama(tmp);
+		printf(" ");
+
+		TulisPOINT(Pos(tmp));
+
+		printf(" %d lv. %d\n", Pasukan(tmp), Lvl(tmp));
+
+		P = Next(P);
+		i++;
+	}
+}
+
+infotype GetAtIdx(List L, int N){
+	addressL P;
+	int i;
+
+	P = First(L);
+	i = 1;
+
+	while(i < N){
+		P = Next(P);
+		i++;
+	}
+
+	return Info(P);
+
+}

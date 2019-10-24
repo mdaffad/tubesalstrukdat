@@ -5,6 +5,8 @@
 
 #include "boolean.h"
 #include "matrikskar.h"
+#include "bangunan.h"
+#include "arraydinpos.h"
 
 
 /* ********** DEFINISI PROTOTIPE PRIMITIF ********** */
@@ -44,3 +46,36 @@ boolean IsMatIdxEff (MATRIKS M, indeks i, indeks j){
 	/* Mengirimkan true jika i, j adalah indeks efektif bagi M */
 	return (i>=GetFirstIdxBrs(M)) && (i<=GetLastIdxBrs(M)) && (j>=GetFirstIdxKol(M)) && (j<=GetLastIdxKol(M));
 }
+
+void FillPeta(MATRIKS *Peta, TabBangunan T){
+	int i,j;
+	Bangunan tmp;
+
+	// fill w/ ' '
+	for(i=1; i<=NBrsEff(*Peta); i++){
+		for(j=1; j<=NKolEff(*Peta); j++){
+			MatElmt(*Peta, i, j) = ' ';
+		}	
+	}
+
+	for(i=1; i<=TabNbElmt(T); i++){
+		tmp = TabElmt(T, i);
+		MatElmt(*Peta, Absis(Pos(tmp)), Ordinat(Pos(tmp))) = Symbol(tmp);
+	}
+}
+
+void PrintPeta(MATRIKS Peta){
+	int i,j;
+
+	for(i=0; i<=NBrsEff(Peta)+1; i++){
+		for(j=0; j<=NKolEff(Peta)+1; j++){
+			if(i==0 || j==0 || i==(NBrsEff(Peta)+1) || j==(NKolEff(Peta)+1)){
+				printf("*");
+			}
+			else{
+				printf("%c", MatElmt(Peta, i, j));
+			}
+		}	
+		printf("\n");
+	}
+}	

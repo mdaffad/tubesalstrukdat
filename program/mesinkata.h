@@ -9,6 +9,9 @@
 
 #define NMax 50
 #define BLANK ' '
+#define BLANK2 '\n'
+#define EOI '\n'
+// end of input
 
 typedef struct {
   char TabKata[NMax+1]; /* container penyimpan kata, indeks yang dipakai [1..NMax] */
@@ -44,5 +47,31 @@ void SalinKata();
           CC = BLANK atau CC = MARK;
           CC adalah karakter sesudah karakter terakhir yang diakuisisi.
           Jika panjang kata melebihi NMax, maka sisa kata "dipotong" */
+
+int CharToInt(char c);
+
+int BacaAngka();
+
+char BacaHuruf();
+
+void BacaInput();
+
+boolean IsKataSama(Kata K1, Kata K2);
+
+boolean IsKataATTACK(Kata K);
+
+boolean IsKataLEVEL_UP(Kata K);
+
+boolean IsKataSKILL(Kata K);
+
+boolean IsKataUNDO(Kata K);
+
+boolean IsKataEND_TURN(Kata K);
+
+boolean IsKataSAVE(Kata K);
+
+boolean IsKataMOVE(Kata K);
+
+boolean IsKataEXIT(Kata K);
 
 #endif

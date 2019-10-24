@@ -49,10 +49,6 @@ void MakeBangunan(Bangunan *B, int Tipe, int X, int Y);
 	/* I.S. B sembarang, Tipe bernilai [1,4] */
 	/* F.S. Membuat bangunan yang bertipe Tipe dan memiliki level 1, memiliki jumlah pasukan awal sesuai spesifikasi */
 
-void UpdateToLevel(Bangunan *B, int Lvl);
-	/* I.S. B bisa sembarang, Lvl bernilai [1,4] */
-	/* F.S. Mengupdate bangunan menjadi level Lvl sesuai spesifikasi */
-
 char Symbol(Bangunan B);
 	/* Mengirimkan karakter simbol yang merepresentasikan bangunan B sesuai tipe:
 		1: Castle (C)
@@ -61,11 +57,29 @@ char Symbol(Bangunan B);
 		4: Village (V)
 	*/
 
+void PrintNama(Bangunan B);
+	/* Mencetak nama bangunan B sesuai tipe:
+		1: Castle (C)
+		2: Tower (T)
+		3: Fort (F)
+		4: Village (V)
+	*/
+
+int CharToTipe(char c);
+
 Bangunan BUndef();
 	/* Mengirimkan nilai bangunan undef dengan spesifikasi semua atribut bernilai -1 */
 
 boolean IsBUndef(Bangunan B);
 	/* Mengirimkan true jika bangunan B adalah BUndef */
+
+void UpdateToLevel(Bangunan *B, int Lvl);
+	/* I.S. B bisa sembarang, Lvl bernilai [1,4] */
+	/* F.S. Mengupdate bangunan menjadi level Lvl sesuai spesifikasi */
+
+boolean CheckLevelUp(Bangunan B);
+
+void LevelUp(Bangunan *B);
 
 void PrintBangunan(Bangunan B);
 	/* I.S. B terdefinisi */

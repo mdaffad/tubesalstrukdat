@@ -9,6 +9,7 @@
 #include "bangunan.h"
 #include "arraydinpos.h"
 
+
 /* ********** KONSTRUKTOR ********** */
 /* Konstruktor : create tabel kosong  */
 void MakeEmpty(TabBangunan *T, int TabMaxEl){
