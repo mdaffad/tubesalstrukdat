@@ -52,24 +52,35 @@ void BacaConfig(TabBangunan *T, MATRIKS *Peta, Player *P1, Player *P2){
 	FillPeta(Peta, *T);
 }
 
-void menuAwal(){
-	int choice;
+void menuAwal(int *choice){
 
 	printf("halo selamat datang di permainan avatar hehe\n");
 	printf("1. start game hehe\n");
 	printf("2. load\n");
 	printf(">> ");
 
-	scanf("%d", &choice);
-	while(choice != 1 && choice != 2){
+	scanf("%d", choice);
+	while(*choice != 1 && *choice != 2){
 		printf("tidak tersedia hehe\n");
 		printf(">> ");
-		scanf("%d", &choice);
+		scanf("%d", choice);
 	}
+	getchar();
+}
+
+int main(){
+	Player P1, P2;
+	MATRIKS Peta;
+	TabBangunan T;
+	int choice;
+
+	menuAwal(&choice);
 
 	switch(choice){
 		case 1: {
 			printf("start!\n");
+			BacaConfig(&T, &Peta, &P1, &P2);
+			TakeTurn(&P1, &P2, &T, Peta);
 			break;
 		}
 		case 2: {
@@ -78,19 +89,8 @@ void menuAwal(){
 			break;
 		}
 	}
-
-}
-
-int main(){
-	Player P1, P2;
-	MATRIKS Peta;
-	TabBangunan T;
 	
-	BacaConfig(&T, &Peta, &P1, &P2);
-	// PrintArrayBangunan(T);
-	// PrintPeta(Peta);
-
-	TakeTurn(&P1, &P2, &T, Peta);
+	
 
 	return 0;
 }
