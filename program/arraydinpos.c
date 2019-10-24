@@ -95,6 +95,7 @@ boolean IsTabFull(TabBangunan T){
 }
 
 void PrintArrayBangunan(TabBangunan T){
+  /* Mencetak isi bangunan dalam TabBangunan T */
   IdxType i;
 
   for(i=GetFirstIdx(T);i<=(GetLastIdx(T));i++){

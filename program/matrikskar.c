@@ -48,6 +48,9 @@ boolean IsMatIdxEff (MATRIKS M, indeks i, indeks j){
 }
 
 void FillPeta(MATRIKS *Peta, TabBangunan T){
+	/* Mengisi M dengan bangunan-bangunan pada T */
+	/* I.S. Peta sembarang */
+	/* F.S. Peta terisi */
 	int i,j;
 	Bangunan tmp;
 
@@ -65,6 +68,9 @@ void FillPeta(MATRIKS *Peta, TabBangunan T){
 }
 
 void PrintPeta(MATRIKS Peta){
+	/* Mencetak peta yang direpresentasikan oleh matriks karakter */
+	/* I.S. Peta terdefinisi */
+	/* F.S. Peta karakter tercetak */
 	int i,j;
 
 	for(i=0; i<=NBrsEff(Peta)+1; i++){

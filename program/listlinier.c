@@ -341,6 +341,7 @@ void Konkat1 (List *L1, List *L2, List *L3){
 }
 
 void PrintListBangunan(List L, TabBangunan T){
+	/* Mencetak bangunan-bangunan pada TabBangunan yang indeksnya ada pada List L */
 	addressL P;
 	int i;
 	Bangunan tmp;
@@ -365,6 +366,7 @@ void PrintListBangunan(List L, TabBangunan T){
 }
 
 infotype GetAtIdx(List L, int N){
+	/* Mengirimkan indeks pada TabBangunan yang ada pada node ke N list */
 	addressL P;
 	int i;
 

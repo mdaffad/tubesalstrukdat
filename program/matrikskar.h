@@ -53,7 +53,13 @@ boolean IsMatIdxEff (MATRIKS M, indeks i, indeks j);
 /* Mengirimkan true jika i, j adalah indeks efektif bagi M */
 
 void FillPeta(MATRIKS *M, TabBangunan T);
+/* Mengisi M dengan bangunan-bangunan pada T */
+/* I.S. Peta sembarang */
+/* F.S. Peta terisi */
 
 void PrintPeta(MATRIKS Peta);
+/* Mencetak peta yang direpresentasikan oleh matriks karakter */
+/* I.S. Peta terdefinisi */
+/* F.S. Peta karakter tercetak */
 
 #endif

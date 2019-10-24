@@ -66,6 +66,12 @@ void PrintNama(Bangunan B);
 	*/
 
 int CharToTipe(char c);
+	/* Mengirim tipe karakter sesuai tipe:
+		1: Castle (C)
+		2: Tower (T)
+		3: Fort (F)
+		4: Village (V)
+	*/
 
 Bangunan BUndef();
 	/* Mengirimkan nilai bangunan undef dengan spesifikasi semua atribut bernilai -1 */
@@ -78,8 +84,12 @@ void UpdateToLevel(Bangunan *B, int Lvl);
 	/* F.S. Mengupdate bangunan menjadi level Lvl sesuai spesifikasi */
 
 boolean CheckLevelUp(Bangunan B);
+	/* Mengembalikan apakah level bangunan B dapat dinaikkan
+		dengan spesifikasi pasukan pada bangunan B harus dapat berkurang sebesar M/2. */
 
 void LevelUp(Bangunan *B);
+	/* Menaikkan level bangunan B
+		pasukan pada bangunan B berkurang sebesar M/2. */
 
 void PrintBangunan(Bangunan B);
 	/* I.S. B terdefinisi */

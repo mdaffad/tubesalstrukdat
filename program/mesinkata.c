@@ -70,10 +70,14 @@ void SalinKata(){
 }
 
 int CharToInt(char c){
+	/* Mengirimkan angka dari karakter, c bernilai ['0'..'9'] */
+
 	return c - '0';
 }
 
 int BacaAngka(){
+	/* Membaca angka selanjutnya */
+	
 	int i;
 	int sum;
 
@@ -86,6 +90,8 @@ int BacaAngka(){
 }
 
 char BacaHuruf(){
+	/* Membaca karakter selanjutnya */
+
 	char c;
 
 	c = CKata.TabKata[1];
@@ -95,6 +101,8 @@ char BacaHuruf(){
 
 void BacaInput(){
 	int i=1;
+	/* Membaca input */
+
 	do {
 		ADVInput();
 		CKata.TabKata[i] = CC;

@@ -49,12 +49,16 @@ void SalinKata();
           Jika panjang kata melebihi NMax, maka sisa kata "dipotong" */
 
 int CharToInt(char c);
+/* Mengirimkan angka dari karakter, c bernilai ['0'..'9'] */
 
 int BacaAngka();
+/* Membaca angka selanjutnya */
 
 char BacaHuruf();
+/* Membaca karakter selanjutnya */
 
 void BacaInput();
+/* Membaca input */
 
 boolean IsKataSama(Kata K1, Kata K2);
 
