@@ -7,18 +7,21 @@
 #include "queue.h"
 #include "stackt.h"
 #include "listlinier.h"
+#include "skill.h"
 #include "bangunan.h"
 #include "matrikskar.h"
 #include "mesinkata.h"
-#include "player.h"
 #include "graf.h"
 #include "pcolor.h"
+#include "player.h"
 
 #include <stdio.h>
 
 void MakePlayer(Player *P, int N){
 	Kode(*P) = N;
 	LCreateEmpty(&L(*P));
+	QCreateEmpty(&Q(*P), 10);
+	Add(&Q(*P), 1); //INSTANT UPGRADE
 }
 
 void AddIdxBangunan(Player *P, int Idx){
@@ -216,6 +219,32 @@ void DoMove(int idxB1, int idxB2, TabBangunan T){
 	PrintNama(*B2); printf(" "); TulisPOINT(Pos(*B2)); printf(".\n");
 }
 
+void DoSkill(Player *PCurrent, Player *PEnemy, TabBangunan *T){
+	int Skill;
+	Bangunan* tmpB;
+	int i;
+
+
+	Del(&Q(*PCurrent), &Skill);
+
+	switch(Skill){
+		case 1: {
+			// IU
+			printf("Instant Upgrade!!\n");
+			
+			for(i=GetFirstIdx(*T);i<=(GetLastIdx(*T));i++){
+				tmpB = &TabElmt(*T, i);
+
+				if(Pemilik(*tmpB) == Kode(*PCurrent) && Lvl(*tmpB) < 4){
+					UpdateToLevel(tmpB, Lvl(*tmpB)+1);
+				}
+			}
+			printf("Level bangunanmu telah meningkat!\n");
+			break;
+		}
+	}
+
+}
 
 
 void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta){
@@ -229,11 +258,19 @@ void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta){
 	PrintPeta(Peta, *T);
 	printf("Player %d\n", Kode(*PCurrent));
 	PrintListBangunan(L(*PCurrent), *T);
-	printf("Skill Available: not implemented yet\n\n");
+	printf("Skill Available: "); 
+	if(!IsQEmpty(Q(*PCurrent))){
+		PrintSkillName(InfoHead(Q(*PCurrent))); printf("\n\n");
+	}
+	else{
+		printf("-\n\n");
+	}
+
+	
 
 	printf("ENTER COMMAND: ");
 	BacaInput();
-	while(!IsKataEND_TURN(CKata)){
+	while(!IsKataEND_TURN(CKata) && !IsKataEXIT(CKata)){
 
 		if(IsKataATTACK(CKata)){
 			IdxFromDaftarBangunan(*PCurrent, *T, &idx, "Daftar Bangunan", "Bangunan yang digunakan untuk menyerang");
@@ -273,16 +310,19 @@ void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta){
 			// printf("move not implemented yet\n");
 		}
 		else if(IsKataSKILL(CKata)){
-			printf("skill not implemented yet\n");
+			if(IsQEmpty(Q(*PCurrent))){
+				printf("Skill tidak tersedia.\n");
+			}
+			else{
+				DoSkill(PCurrent, PEnemy, T);
+			}
+			// printf("skill not implemented yet\n");
 		}
 		else if(IsKataUNDO(CKata)){
 			printf("undo not implemented yet\n");
 		}
 		else if(IsKataSAVE(CKata)){
 			printf("save not implemented yet\n");
-		}
-		else if(IsKataEXIT(CKata)){
-			printf("exit not implemented yet\n");
 		}
 		else{
 			printf("INPUT YG BENER LAH\n");
@@ -292,6 +332,9 @@ void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta){
 	}
 	if(IsKataEND_TURN(CKata)){
 		TakeTurn(PEnemy, PCurrent, T, Peta);
+	}
+	else if(IsKataEXIT(CKata)){
+		printf("ByeBye!\n");
 	}
 }
 

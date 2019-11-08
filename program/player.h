@@ -13,18 +13,20 @@
 #include "bangunan.h"
 #include "matrikskar.h"
 #include "mesinkata.h"
-
+#include "skill.h"
+#include "graf.h"
+#include "pcolor.h"
 
 // DEFINISI ADT BANGUNAN
 typedef struct {
 	int Kode;
 	List L;
-	// Queue Q;
+	Queue Q;
 } Player;
 
 #define Kode(P) (P).Kode
 #define L(P) (P).L
-
+#define Q(P) (P).Q
 
 void MakePlayer(Player *P, int Kode);
 
