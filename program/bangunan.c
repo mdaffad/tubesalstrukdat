@@ -41,6 +41,7 @@ void MakeBangunan(Bangunan *B, int Tipe, int X, int Y){
 	}
 
 	hasAttacked(*B) = false;
+	hasMoved(*B) = false;
 	Pos(*B) = MakePOINT(X,Y);
 	UpdateToLevel(B, 1);
 }
@@ -209,6 +210,7 @@ Bangunan BUndef(){
 	P(B) = false;
 	Pos(B) = MakePOINT(-1,-1);
 	hasAttacked(B) = false;
+	hasMoved(B) = false;
 	return B;
 }
 
@@ -225,6 +227,7 @@ boolean IsBUndef(Bangunan B){
 	isUndef &= P(B) == false;
 	isUndef &= PointEQ(Pos(B), MakePOINT(-1,-1));
 	isUndef &= hasAttacked(B) == false;
+	isUndef &= hasMoved(B) == false;
 
 	return isUndef;
 }
@@ -384,6 +387,7 @@ void PrintBangunan(Bangunan B){
 	P(B) ? printf("P: yes\n") : printf("P: no\n");
 	printf("Pos: "); TulisPOINT(Pos(B)); printf("\n");
 	hasAttacked(B) ? printf("hasAttacked: yes\n") : printf("hasAttacked: no\n");
+	hasMoved(B) ? printf("hasMoved: yes\n") : printf("hasMoved: no\n");
 }
 	
 	

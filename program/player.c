@@ -42,11 +42,12 @@ void UpdatePasukan(TabBangunan *T, Player P){
 	}
 }
 
-void ResetHasAttacked(TabBangunan *T){
+void ResetAttackMove(TabBangunan *T){
 	int i;
 
 	for(i=GetFirstIdx(*T);i<=(GetLastIdx(*T));i++){
 		hasAttacked(TabElmt(*T, i)) = false;
+		hasMoved(TabElmt(*T, i)) = false;
 	}
 }
 
@@ -73,7 +74,8 @@ void IdxFromDaftarBangunan(Player P, TabBangunan T, int *idx, char *PesanDaftar,
 	
 }
 
-void IdxFromAdjacentBangunan(int indeksInput, Player P, TabBangunan T, int *idx, char *PesanDaftar, char *PesanInput){
+void IdxFromAdjacentBangunan(int indeksInput, Player P, TabBangunan T, int *idx, char *PesanDaftar, char *PesanInput, boolean self){
+	// jika self=true, bangunan milik sendiri
 	int choice;
 	List tmp;
 	Bangunan tmpBangunan;
@@ -84,8 +86,15 @@ void IdxFromAdjacentBangunan(int indeksInput, Player P, TabBangunan T, int *idx,
 	// loop all tab
 	for(i=1; i<=TabNbElmt(T); i++){
 		tmpBangunan = TabElmt(T, i);
-		if(Pemilik(tmpBangunan) != Kode(P) && isConnected(indeksInput, i)){
-			InsVLast(&tmp, i);
+		if(self){
+			if(Pemilik(tmpBangunan) == Kode(P) && isConnected(indeksInput, i)){
+				InsVLast(&tmp, i);
+			}
+		}
+		else{
+			if(Pemilik(tmpBangunan) != Kode(P) && isConnected(indeksInput, i)){
+				InsVLast(&tmp, i);
+			}
 		}
 	}
 	// list terisi semua yg adjacent dgn bangunan T[indeksInput]
@@ -136,8 +145,6 @@ void TransferPemilik(int idxB, Player *PCurrent, Player *PEnemy, TabBangunan T){
 }
 
 void DoAttack(int idxB1, int idxB2, Player *PCurrent, Player *PEnemy, TabBangunan T){
-	// BELUM DIHANDLE : SETIAP BANGUNAN HANYA BISA MENYERANG SEKALI DALAM 1 TURN!
-
 	// B1 menyerang B2
 	int N;
 	Bangunan *B1 = &TabElmt(T, idxB1);
@@ -184,12 +191,39 @@ void DoAttack(int idxB1, int idxB2, Player *PCurrent, Player *PEnemy, TabBanguna
 	}
 }
 
+void DoMove(int idxB1, int idxB2, TabBangunan T){
+
+	// B1 menyerang B2
+	int N;
+	Bangunan *B1 = &TabElmt(T, idxB1);
+	Bangunan *B2 = &TabElmt(T, idxB2);
+
+	printf("Jumlah pasukan: ");
+	scanf("%d", &N);
+	while(N > Pasukan(*B1) || N < 0){
+		printf("GA VALID WOY!.\n");
+		printf("Jumlah pasukan: ");
+		scanf("%d", &N);
+	}
+
+	Pasukan(*B1) = Pasukan(*B1) - N;
+	Pasukan(*B2) = Pasukan(*B2) + N;
+	hasMoved(*B1) = true;
+	
+	printf("%d pasukan dari ", N);
+	PrintNama(*B1); printf(" "); TulisPOINT(Pos(*B1)); printf(" ");
+	printf("telah berpindah ke ");
+	PrintNama(*B2); printf(" "); TulisPOINT(Pos(*B2)); printf(".\n");
+}
+
+
+
 void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta){
 	int idx;
 	int idx2;
 
 	UpdatePasukan(T, *PCurrent);
-	ResetHasAttacked(T);
+	ResetAttackMove(T);
 
 	printf("\n");
 	PrintPeta(Peta, *T);
@@ -205,7 +239,7 @@ void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta){
 			IdxFromDaftarBangunan(*PCurrent, *T, &idx, "Daftar Bangunan", "Bangunan yang digunakan untuk menyerang");
 			if(!hasAttacked(TabElmt(*T, idx))){
 				if(idx != -1){
-					IdxFromAdjacentBangunan(idx, *PCurrent, *T, &idx2, "Daftar bangunan yang dapat diserang", "Bangunan yang diserang");
+					IdxFromAdjacentBangunan(idx, *PCurrent, *T, &idx2, "Daftar bangunan yang dapat diserang", "Bangunan yang diserang", false);
 				}
 				if(idx != -1 && idx2 != -1){
 					DoAttack(idx, idx2, PCurrent, PEnemy, *T);
@@ -215,14 +249,28 @@ void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta){
 				printf("Bangunan telah menyerang giliran ini.\n");
 			}
 			getchar();
-			
-			// printf("attack not implemented yet\n");
 		}
 		else if(IsKataLEVEL_UP(CKata)){
 			IdxFromDaftarBangunan(*PCurrent, *T, &idx, "Daftar Bangunan", "Bangunan yang akan di level up");
 			// printf("%d\n", idx);
 			DoLevelUp(&TabElmt(*T, idx));
 			getchar();
+		}
+		else if(IsKataMOVE(CKata)){
+			IdxFromDaftarBangunan(*PCurrent, *T, &idx, "Daftar Bangunan", "Pilih bangunan");
+			if(!hasMoved(TabElmt(*T, idx))){
+				if(idx != -1){
+					IdxFromAdjacentBangunan(idx, *PCurrent, *T, &idx2, "Daftar bangunan terdekat", "Bangunan yang akan menerima", true);
+				}
+				if(idx != -1 && idx2 != -1){
+					DoMove(idx, idx2, *T);
+				}
+			}
+			else{
+				printf("Bangunan telah berpindah pasukan giliran ini.\n");
+			}
+			getchar();
+			// printf("move not implemented yet\n");
 		}
 		else if(IsKataSKILL(CKata)){
 			printf("skill not implemented yet\n");
@@ -232,9 +280,6 @@ void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta){
 		}
 		else if(IsKataSAVE(CKata)){
 			printf("save not implemented yet\n");
-		}
-		else if(IsKataMOVE(CKata)){
-			printf("move not implemented yet\n");
 		}
 		else if(IsKataEXIT(CKata)){
 			printf("exit not implemented yet\n");
