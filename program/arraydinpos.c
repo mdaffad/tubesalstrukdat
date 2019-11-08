@@ -99,6 +99,7 @@ void PrintArrayBangunan(TabBangunan T){
   IdxType i;
 
   for(i=GetFirstIdx(T);i<=(GetLastIdx(T));i++){
+    printf("INDEX: %d\n", i);
     PrintBangunan(TabElmt(T, i));
     if(i<(GetLastIdx(T))){
       printf("\n");

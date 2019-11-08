@@ -28,6 +28,7 @@ typedef struct {
 	int M;			/* nilai maksimum penambahan pasukan = jika pasukan >= M, penambahan pasukan sebanyak A tidak dilakukan */
 	boolean P;		/* pertahanan, bernilai true/false = apakah bangunan memiliki pertahanan, bangunan yg memiliki pertahanan ... (baca di spek) */
 	POINT Pos;		/* posisi = posisi bangunan */
+	boolean hasAttacked; /* bernilai true/false menyatakan apakah bangunan sudah menyerang atau belum pada 1 giliran, direset setiap awal turn */
 
 } Bangunan;
 
@@ -41,6 +42,7 @@ typedef struct {
 #define M(B) (B).M
 #define P(B) (B).P
 #define Pos(B) (B).Pos
+#define hasAttacked(B) (B).hasAttacked
 
 
 /* ************ Prototype ************ */
@@ -51,6 +53,14 @@ void MakeBangunan(Bangunan *B, int Tipe, int X, int Y);
 
 char Symbol(Bangunan B);
 	/* Mengirimkan karakter simbol yang merepresentasikan bangunan B sesuai tipe:
+		1: Castle (C)
+		2: Tower (T)
+		3: Fort (F)
+		4: Village (V)
+	*/
+
+void PrintSymbolColor(Bangunan B);
+	/* Mencetak nama bangunan B sesuai tipe dgn warna:
 		1: Castle (C)
 		2: Tower (T)
 		3: Fort (F)

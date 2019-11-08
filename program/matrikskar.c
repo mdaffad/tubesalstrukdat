@@ -63,11 +63,12 @@ void FillPeta(MATRIKS *Peta, TabBangunan T){
 
 	for(i=1; i<=TabNbElmt(T); i++){
 		tmp = TabElmt(T, i);
-		MatElmt(*Peta, Absis(Pos(tmp)), Ordinat(Pos(tmp))) = Symbol(tmp);
+		MatElmt(*Peta, Absis(Pos(tmp)), Ordinat(Pos(tmp))) = i;
+		// manfaatkan kar = idx
 	}
 }
 
-void PrintPeta(MATRIKS Peta){
+void PrintPeta(MATRIKS Peta, TabBangunan T){
 	/* Mencetak peta yang direpresentasikan oleh matriks karakter */
 	/* I.S. Peta terdefinisi */
 	/* F.S. Peta karakter tercetak */
@@ -79,7 +80,12 @@ void PrintPeta(MATRIKS Peta){
 				printf("*");
 			}
 			else{
-				printf("%c", MatElmt(Peta, i, j));
+				if(MatElmt(Peta, i, j) == ' '){
+					printf(" ");
+				}
+				else{
+					PrintSymbolColor(TabElmt(T, MatElmt(Peta, i, j)));
+				}
 			}
 		}	
 		printf("\n");

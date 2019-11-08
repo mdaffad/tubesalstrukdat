@@ -9,6 +9,8 @@
 #include "bangunan.h"
 #include "matrikskar.h"
 #include "player.h"
+#include "graf.h"
+#include "pcolor.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -34,22 +36,27 @@ void BacaConfig(TabBangunan *T, MATRIKS *Peta, Player *P1, Player *P2){
 	B = BacaAngka();
 
 	for(i=1; i<=B; i++){
-		if(i==1){
-			AddIdxBangunan(P1, i);
-		}
-
-		if(i==2){
-			AddIdxBangunan(P2, i);
-		}
-
 		tipe = CharToTipe(BacaHuruf());
 		x = BacaAngka();
 		y = BacaAngka();
 		MakeBangunan(&tmp, tipe, x, y);
+
+		if(i==1){
+			AddIdxBangunan(P1, i);
+			Pemilik(tmp) = 1;
+		}
+
+		if(i==2){
+			AddIdxBangunan(P2, i);
+			Pemilik(tmp) = 2;
+		}
+
 		TabElmt(*T, i) = tmp;
 	}
 
 	FillPeta(Peta, *T);
+	// printf("%d\n", IsBUndef(BUndef()));
+
 }
 
 void menuAwal(int *choice){
@@ -94,3 +101,4 @@ int main(){
 
 	return 0;
 }
+

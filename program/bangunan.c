@@ -4,6 +4,7 @@
 #include "boolean.h"
 #include "point.h"
 #include "bangunan.h"
+#include "pcolor.h"
 #include <stdio.h>
 
 /* ************ Prototype ************ */
@@ -39,6 +40,7 @@ void MakeBangunan(Bangunan *B, int Tipe, int X, int Y){
 		}
 	}
 
+	hasAttacked(*B) = false;
 	Pos(*B) = MakePOINT(X,Y);
 	UpdateToLevel(B, 1);
 }
@@ -70,6 +72,71 @@ char Symbol(Bangunan B){
 		}
 	}
 }
+
+void PrintSymbolColor(Bangunan B){
+	/* Mencetak nama bangunan B sesuai tipe dgn warna:
+		1: Castle (C)
+		2: Tower (T)
+		3: Fort (F)
+		4: Village (V)
+	*/
+
+	switch(Tipe(B)){
+		case 1: {
+			// CASTLE (C)
+			if(Pemilik(B)==1){
+				print_blue('C');
+			}
+			else if(Pemilik(B)==2){
+				print_red('C');
+			}
+			else{
+				printf("C");
+			}
+			break;
+		}
+		case 2: {
+			// TOWER (T)
+			if(Pemilik(B)==1){
+				print_blue('T');
+			}
+			else if(Pemilik(B)==2){
+				print_red('T');
+			}
+			else{
+				printf("T");
+			}
+			break;
+		}
+		case 3: {
+			// FORT (F)
+			if(Pemilik(B)==1){
+				print_blue('F');
+			}
+			else if(Pemilik(B)==2){
+				print_red('F');
+			}
+			else{
+				printf("F");	
+			}
+			break;
+		}
+		case 4: {
+			// VILLAGE (V)
+			if(Pemilik(B)==1){
+				print_blue('V');
+			}
+			else if(Pemilik(B)==2){
+				print_red('V');
+			}
+			else{
+				printf("V");
+			}
+			break;
+		}
+	}
+}
+
 
 void PrintNama(Bangunan B){
 	/* Mencetak nama bangunan B sesuai tipe:
@@ -141,6 +208,7 @@ Bangunan BUndef(){
 	M(B) = -1;
 	P(B) = false;
 	Pos(B) = MakePOINT(-1,-1);
+	hasAttacked(B) = false;
 	return B;
 }
 
@@ -149,13 +217,15 @@ boolean IsBUndef(Bangunan B){
 	boolean isUndef;
 
 	isUndef = Tipe(B) == -1;
-	isUndef = Pemilik(B) == -1;
-	isUndef = Pasukan(B) == -1;
-	isUndef = Lvl(B) == -1;
-	isUndef = A(B) == -1;
-	isUndef = M(B) == -1;
-	isUndef = P(B) == false;
-	isUndef = PointEQ(Pos(B), MakePOINT(-1,-1));
+	isUndef &= Pemilik(B) == -1;
+	isUndef &= Pasukan(B) == -1;
+	isUndef &= Lvl(B) == -1;
+	isUndef &= A(B) == -1;
+	isUndef &= M(B) == -1;
+	isUndef &= P(B) == false;
+	isUndef &= PointEQ(Pos(B), MakePOINT(-1,-1));
+	isUndef &= hasAttacked(B) == false;
+
 	return isUndef;
 }
 
@@ -313,6 +383,7 @@ void PrintBangunan(Bangunan B){
 	printf("M: %d\n", M(B));
 	P(B) ? printf("P: yes\n") : printf("P: no\n");
 	printf("Pos: "); TulisPOINT(Pos(B)); printf("\n");
+	hasAttacked(B) ? printf("hasAttacked: yes\n") : printf("hasAttacked: no\n");
 }
 	
 	

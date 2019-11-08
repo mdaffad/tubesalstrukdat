@@ -11,6 +11,8 @@
 #include "matrikskar.h"
 #include "mesinkata.h"
 #include "player.h"
+#include "graf.h"
+#include "pcolor.h"
 
 #include <stdio.h>
 
@@ -40,21 +42,73 @@ void UpdatePasukan(TabBangunan *T, Player P){
 	}
 }
 
+void ResetHasAttacked(TabBangunan *T){
+	int i;
+
+	for(i=GetFirstIdx(*T);i<=(GetLastIdx(*T));i++){
+		hasAttacked(TabElmt(*T, i)) = false;
+	}
+}
+
 void IdxFromDaftarBangunan(Player P, TabBangunan T, int *idx, char *PesanDaftar, char *PesanInput){
 	int choice;
 
-	printf("%s:\n", PesanDaftar);
-	PrintListBangunan(L(P), T);
-
-	printf("%s: ", PesanInput);
-	scanf("%d", &choice);
-	while(choice > NbElmt(L(P)) || choice <= 0){
-		printf("Bangunan tidak ada.\n");
+	if(!IsLEmpty(L(P))){
+		printf("%s:\n", PesanDaftar);
+		PrintListBangunan(L(P), T);
 		printf("%s: ", PesanInput);
 		scanf("%d", &choice);
-	}
+		while(choice > NbElmt(L(P)) || choice <= 0){
+			printf("Bangunan tidak ada.\n");
+			printf("%s: ", PesanInput);
+			scanf("%d", &choice);
+		}
 
-	*idx = GetAtIdx(L(P), choice);
+		*idx = GetAtIdx(L(P), choice);
+	}
+	else{
+		printf("Tidak ada bangunan.\n");
+		*idx = -1;
+	}
+	
+}
+
+void IdxFromAdjacentBangunan(int indeksInput, Player P, TabBangunan T, int *idx, char *PesanDaftar, char *PesanInput){
+	int choice;
+	List tmp;
+	Bangunan tmpBangunan;
+	int i;
+
+	// find adj put in list
+	LCreateEmpty(&tmp);
+	// loop all tab
+	for(i=1; i<=TabNbElmt(T); i++){
+		tmpBangunan = TabElmt(T, i);
+		if(Pemilik(tmpBangunan) != Kode(P) && isConnected(indeksInput, i)){
+			InsVLast(&tmp, i);
+		}
+	}
+	// list terisi semua yg adjacent dgn bangunan T[indeksInput]
+	if(!IsLEmpty(tmp)){
+		printf("%s:\n", PesanDaftar);
+	
+		PrintListBangunan(tmp, T);
+
+		printf("%s: ", PesanInput);
+		scanf("%d", &choice);
+		while(choice > NbElmt(tmp) || choice <= 0){
+			printf("Bangunan tidak ada.\n");
+			printf("%s: ", PesanInput);
+			scanf("%d", &choice);
+		}
+
+		*idx = GetAtIdx(tmp, choice);
+	}
+	else{
+		printf("Tidak ada bangunan yang terhubung.\n");
+		*idx = -1;
+	}
+	
 }
 
 void DoLevelUp(Bangunan *B){
@@ -70,13 +124,75 @@ void DoLevelUp(Bangunan *B){
 	printf("\n");
 }
 
+void TransferPemilik(int idxB, Player *PCurrent, Player *PEnemy, TabBangunan T){
+	Bangunan *B = &TabElmt(T, idxB);
+	// Bangunan B menjadi milik PCurrent
+
+	if(Pemilik(*B) == Kode(*PEnemy)){
+		DelIdxBangunan(PEnemy, idxB);
+	}
+	Pemilik(*B) = Kode(*PCurrent);
+	AddIdxBangunan(PCurrent, idxB);
+}
+
+void DoAttack(int idxB1, int idxB2, Player *PCurrent, Player *PEnemy, TabBangunan T){
+	// BELUM DIHANDLE : SETIAP BANGUNAN HANYA BISA MENYERANG SEKALI DALAM 1 TURN!
+
+	// B1 menyerang B2
+	int N;
+	Bangunan *B1 = &TabElmt(T, idxB1);
+	Bangunan *B2 = &TabElmt(T, idxB2);
+
+	printf("Jumlah pasukan: ");
+	scanf("%d", &N);
+	while(N > Pasukan(*B1) || N < 0){
+		printf("GA VALID WOY!.\n");
+		printf("Jumlah pasukan: ");
+		scanf("%d", &N);
+	}
+
+	Pasukan(*B1) = Pasukan(*B1) - N;
+	hasAttacked(*B1) = true;
+	// KASUS TIDAK ADA PERTAHANAN
+	if(P(*B2) == false){
+		if(N < Pasukan(*B2)){
+			Pasukan(*B2) = Pasukan(*B2) - N;
+			printf("Bangunan gagal direbut.\n");
+		}
+		else{
+			// N >= Pasukan(*B2)
+			Pasukan(*B2) = N - Pasukan(*B2);
+			// TRANSFER PEMILIK
+			UpdateToLevel(B2, 1);
+			TransferPemilik(idxB2, PCurrent, PEnemy, T);
+			printf("Bangunan menjadi milikmu!\n");
+		}
+	}
+	else{
+		if(N < Pasukan(*B2)*4/3){
+			Pasukan(*B2) = Pasukan(*B2) - N*3/4;
+			printf("Bangunan gagal direbut.\n");
+		}
+		else{
+			// N >= Pasukan(*B2)*4/3
+			Pasukan(*B2) = N - Pasukan(*B2)*4/3;
+			// TRANSFER PEMILIK
+			UpdateToLevel(B2, 1);
+			TransferPemilik(idxB2, PCurrent, PEnemy, T);
+			printf("Bangunan menjadi milikmu!\n");
+		}
+	}
+}
+
 void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta){
 	int idx;
+	int idx2;
 
 	UpdatePasukan(T, *PCurrent);
+	ResetHasAttacked(T);
 
 	printf("\n");
-	PrintPeta(Peta);
+	PrintPeta(Peta, *T);
 	printf("Player %d\n", Kode(*PCurrent));
 	PrintListBangunan(L(*PCurrent), *T);
 	printf("Skill Available: not implemented yet\n\n");
@@ -85,16 +201,47 @@ void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta){
 	BacaInput();
 	while(!IsKataEND_TURN(CKata)){
 
-		if(IsKataLEVEL_UP(CKata)){
+		if(IsKataATTACK(CKata)){
+			IdxFromDaftarBangunan(*PCurrent, *T, &idx, "Daftar Bangunan", "Bangunan yang digunakan untuk menyerang");
+			if(!hasAttacked(TabElmt(*T, idx))){
+				if(idx != -1){
+					IdxFromAdjacentBangunan(idx, *PCurrent, *T, &idx2, "Daftar bangunan yang dapat diserang", "Bangunan yang diserang");
+				}
+				if(idx != -1 && idx2 != -1){
+					DoAttack(idx, idx2, PCurrent, PEnemy, *T);
+				}
+			}
+			else{
+				printf("Bangunan telah menyerang giliran ini.\n");
+			}
+			getchar();
+			
+			// printf("attack not implemented yet\n");
+		}
+		else if(IsKataLEVEL_UP(CKata)){
 			IdxFromDaftarBangunan(*PCurrent, *T, &idx, "Daftar Bangunan", "Bangunan yang akan di level up");
 			// printf("%d\n", idx);
 			DoLevelUp(&TabElmt(*T, idx));
 			getchar();
 		}
+		else if(IsKataSKILL(CKata)){
+			printf("skill not implemented yet\n");
+		}
+		else if(IsKataUNDO(CKata)){
+			printf("undo not implemented yet\n");
+		}
+		else if(IsKataSAVE(CKata)){
+			printf("save not implemented yet\n");
+		}
+		else if(IsKataMOVE(CKata)){
+			printf("move not implemented yet\n");
+		}
+		else if(IsKataEXIT(CKata)){
+			printf("exit not implemented yet\n");
+		}
 		else{
 			printf("INPUT YG BENER LAH\n");
 		}
-		
 		printf("ENTER COMMAND: ");
 		BacaInput();
 	}

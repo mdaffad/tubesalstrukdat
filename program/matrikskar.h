@@ -57,7 +57,7 @@ void FillPeta(MATRIKS *M, TabBangunan T);
 /* I.S. Peta sembarang */
 /* F.S. Peta terisi */
 
-void PrintPeta(MATRIKS Peta);
+void PrintPeta(MATRIKS Peta, TabBangunan T);
 /* Mencetak peta yang direpresentasikan oleh matriks karakter */
 /* I.S. Peta terdefinisi */
 /* F.S. Peta karakter tercetak */
