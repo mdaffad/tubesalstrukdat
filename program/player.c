@@ -219,7 +219,7 @@ void DoMove(int idxB1, int idxB2, TabBangunan T){
 	PrintNama(*B2); printf(" "); TulisPOINT(Pos(*B2)); printf(".\n");
 }
 
-void DoSkill(Player *PCurrent, Player *PEnemy, TabBangunan *T){
+void DoSkill(Player *PCurrent, Player *PEnemy, TabBangunan *T, boolean *ExtraTurn){
 	int Skill;
 	Bangunan* tmpB;
 	int i;
@@ -241,6 +241,33 @@ void DoSkill(Player *PCurrent, Player *PEnemy, TabBangunan *T){
 			}
 			printf("Level bangunanmu telah meningkat!\n");
 			break;
+		} case 2: {
+			// SHIELD
+			break;
+		} case 3: {
+			// EXTRA TURN
+			printf("EXTRA TURN!!\n");
+			*ExtraTurn = true;
+			printf("Kamu mendapat tambahan satu giliran!\n");
+			break;
+		} case 4: {
+			// ATTACK UP
+			break;
+		} case 5: {
+			// CRITICAL HIT
+			break;
+		} case 6: {
+			// INSTANT REINFORCEMENT
+			break;
+		} case 7: {
+			// BARRAGE
+			printf("Barrage!!\n");
+			for(i=GetFirstIdx(*T);i<=(GetLastIdx(*T));i++){
+				tmpB = &TabElmt(*T, i);
+				if(Pemilik(*tmpB) == Kode(*PEnemy)) Pasukan(*tmpB) -= 10;
+			}
+			printf("Jumlah pasukan di semua bangunan musuh berkurang 10!\n");
+			break;
 		}
 	}
 
@@ -251,6 +278,7 @@ void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta){
 	int idx;
 	int idx2;
 
+	SkillExtra:
 	UpdatePasukan(T, *PCurrent);
 	ResetAttackMove(T);
 
@@ -314,7 +342,9 @@ void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta){
 				printf("Skill tidak tersedia.\n");
 			}
 			else{
-				DoSkill(PCurrent, PEnemy, T);
+				boolean ExtraTurn = false;
+				DoSkill(PCurrent, PEnemy, T, &ExtraTurn);
+				if(ExtraTurn) goto SkillExtra;
 			}
 			// printf("skill not implemented yet\n");
 		}
