@@ -255,9 +255,15 @@ void DoSkill(Player *PCurrent, Player *PEnemy, TabBangunan *T, boolean *ExtraTur
 			break;
 		} case 5: {
 			// CRITICAL HIT
+			
 			break;
 		} case 6: {
 			// INSTANT REINFORCEMENT
+			printf("Instant Reinforcement!!\n");
+			for(i=GetFirstIdx(*T);i<=(GetLastIdx(*T));i++){
+				tmpB = &TabElmt(*T, i);
+				if(Pemilik(*tmpB) == Kode(*PCurrent)) Pasukan(*tmpB) += 5;
+			}
 			break;
 		} case 7: {
 			// BARRAGE
