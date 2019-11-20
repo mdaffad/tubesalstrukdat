@@ -172,7 +172,7 @@ void TransferPemilik(int idxB, Player *PCurrent, Player *PEnemy, TabBangunan T){
 	AddIdxBangunan(PCurrent, idxB);
 }
 
-void DoAttack(int idxB1, int idxB2, Player *PCurrent, Player *PEnemy, TabBangunan T, Stack *S, boolean *IsSkill7){
+void DoAttack(int idxB1, int idxB2, Player *PCurrent, Player *PEnemy, TabBangunan T, Stack *S, boolean *IsSkill2, boolean *IsSkill7){
 	// B1 menyerang B2
 	int N;
 	Bangunan *B1 = &TabElmt(T, idxB1);
@@ -197,6 +197,7 @@ void DoAttack(int idxB1, int idxB2, Player *PCurrent, Player *PEnemy, TabBanguna
 		if(N < Pasukan(*B2)){
 			Pasukan(*B2) = Pasukan(*B2) - N;
 			printf("Bangunan gagal direbut.\n");
+			*IsSkill2 = false;
 			*IsSkill7 = false;
 		}
 		else{
@@ -206,6 +207,7 @@ void DoAttack(int idxB1, int idxB2, Player *PCurrent, Player *PEnemy, TabBanguna
 			UpdateToLevel(B2, 1);
 			TransferPemilik(idxB2, PCurrent, PEnemy, T);
 			printf("Bangunan menjadi milikmu!\n");
+			if(NbElmt(L(*PEnemy)) == 2) *IsSkill2 = true;
 			if(NbElmt(L(*PCurrent)) == 10) *IsSkill7 = true; /* Activate Skill 7*/
 			else *IsSkill7 = false;
 		}
@@ -214,6 +216,7 @@ void DoAttack(int idxB1, int idxB2, Player *PCurrent, Player *PEnemy, TabBanguna
 		if(N < Pasukan(*B2)*4/3){
 			Pasukan(*B2) = Pasukan(*B2) - N*3/4;
 			printf("Bangunan gagal direbut.\n");
+			*IsSkill2 = false;
 			*IsSkill7 = false;
 		}
 		else{
@@ -223,6 +226,7 @@ void DoAttack(int idxB1, int idxB2, Player *PCurrent, Player *PEnemy, TabBanguna
 			UpdateToLevel(B2, 1);
 			TransferPemilik(idxB2, PCurrent, PEnemy, T);
 			printf("Bangunan menjadi milikmu!\n");
+			if(NbElmt(L(*PEnemy)) == 2) *IsSkill2 = true;
 			if(NbElmt(L(*PCurrent)) == 10) *IsSkill7 = true; /* Activate Skill 7*/
 			else *IsSkill7 = false;
 		}
@@ -385,8 +389,8 @@ void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta){
 					IdxFromAdjacentBangunan(idx, *PCurrent, *T, &idx2, "Daftar bangunan yang dapat diserang", "Bangunan yang diserang", false);
 				}
 				if(idx != -1 && idx2 != -1){
-					DoAttack(idx, idx2, PCurrent, PEnemy, *T, &S, &IsSkill7);
-					AddSkill(PEnemy, IsSkill2, IsSkill3, IsSkill4, IsSkill5, IsSkill6, IsSkill7);
+					DoAttack(idx, idx2, PCurrent, PEnemy, *T, &S, &IsSkill2, &IsSkill7);
+					AddSkill(PEnemy, IsSkill2, 0, 0, 0, 0, IsSkill7);
 				}
 			}
 			else{
