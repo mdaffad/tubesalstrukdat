@@ -123,7 +123,10 @@ void IdxFromAdjacentBangunan(int indeksInput, Player P, TabBangunan T, int *idx,
 	
 }
 
-void DoLevelUp(Bangunan *B){
+void DoLevelUp(int idx, TabBangunan T){
+	Bangunan *B;
+	B = &TabElmt(T, idx);
+
 	if(CheckLevelUp(*B)){
 		LevelUp(B);
 		printf("Level ");
@@ -196,7 +199,7 @@ void DoAttack(int idxB1, int idxB2, Player *PCurrent, Player *PEnemy, TabBanguna
 
 void DoMove(int idxB1, int idxB2, TabBangunan T){
 
-	// B1 menyerang B2
+	// pasukan B1 bergerak ke B2
 	int N;
 	Bangunan *B1 = &TabElmt(T, idxB1);
 	Bangunan *B2 = &TabElmt(T, idxB2);
@@ -296,6 +299,8 @@ void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta){
 	int idx;
 	int idx2;
 	boolean ExtraTurn;
+	// create empty stack per turn bcs stack cant go over turn
+
 
 	ExtraTurn = false;
 	UpdatePasukan(T, *PCurrent);
@@ -337,7 +342,7 @@ void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta){
 		else if(IsKataLEVEL_UP(CKata)){
 			IdxFromDaftarBangunan(*PCurrent, *T, &idx, "Daftar Bangunan", "Bangunan yang akan di level up");
 			// printf("%d\n", idx);
-			DoLevelUp(&TabElmt(*T, idx));
+			DoLevelUp(idx, *T);
 			getchar();
 		}
 		else if(IsKataMOVE(CKata)){
@@ -354,7 +359,6 @@ void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta){
 				printf("Bangunan telah berpindah pasukan giliran ini.\n");
 			}
 			getchar();
-			// printf("move not implemented yet\n");
 		}
 		else if(IsKataSKILL(CKata)){
 			if(IsQEmpty(Q(*PCurrent))){
