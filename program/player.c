@@ -262,15 +262,27 @@ void DoSkill(Player *PCurrent, Player *PEnemy, TabBangunan *T, boolean *ExtraTur
 			printf("Instant Reinforcement!!\n");
 			for(i=GetFirstIdx(*T);i<=(GetLastIdx(*T));i++){
 				tmpB = &TabElmt(*T, i);
-				if(Pemilik(*tmpB) == Kode(*PCurrent)) Pasukan(*tmpB) += 5;
+
+				if(Pemilik(*tmpB) == Kode(*PCurrent)){
+					Pasukan(*tmpB) += 5;
+				}
 			}
 			break;
 		} case 7: {
 			// BARRAGE
 			printf("Barrage!!\n");
+
 			for(i=GetFirstIdx(*T);i<=(GetLastIdx(*T));i++){
 				tmpB = &TabElmt(*T, i);
-				if(Pemilik(*tmpB) == Kode(*PEnemy)) Pasukan(*tmpB) -= 10;
+
+				if(Pemilik(*tmpB) == Kode(*PEnemy)){
+					if(Pasukan(*tmpB) > 10){
+						Pasukan(*tmpB) -= 10;	
+					}
+					else{
+						Pasukan(*tmpB) = 0;
+					}
+				}
 			}
 			printf("Jumlah pasukan di semua bangunan musuh berkurang 10!\n");
 			break;
@@ -283,8 +295,9 @@ void DoSkill(Player *PCurrent, Player *PEnemy, TabBangunan *T, boolean *ExtraTur
 void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta){
 	int idx;
 	int idx2;
+	boolean ExtraTurn;
 
-	SkillExtra:
+	ExtraTurn = false;
 	UpdatePasukan(T, *PCurrent);
 	ResetAttackMove(T);
 
@@ -348,9 +361,7 @@ void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta){
 				printf("Skill tidak tersedia.\n");
 			}
 			else{
-				boolean ExtraTurn = false;
 				DoSkill(PCurrent, PEnemy, T, &ExtraTurn);
-				if(ExtraTurn) goto SkillExtra;
 			}
 			// printf("skill not implemented yet\n");
 		}
@@ -366,8 +377,15 @@ void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta){
 		printf("ENTER COMMAND: ");
 		BacaInput();
 	}
+
 	if(IsKataEND_TURN(CKata)){
-		TakeTurn(PEnemy, PCurrent, T, Peta);
+		if(ExtraTurn){
+			TakeTurn(PCurrent, PEnemy, T, Peta);
+		}
+		else{
+			TakeTurn(PEnemy, PCurrent, T, Peta);
+		}
+		
 	}
 	else if(IsKataEXIT(CKata)){
 		printf("ByeBye!\n");
