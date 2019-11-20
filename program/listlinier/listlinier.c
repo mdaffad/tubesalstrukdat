@@ -293,52 +293,6 @@ int NbElmt (List L){
 	return sum;
 }
 
-/*** Prekondisi untuk Max/Min/rata-rata : List tidak kosong ***/
-infotype Max (List L){
-	/* Mengirimkan nilai Info(P) yang maksimum */
-
-	infotype max;
-	addressL P;
-
-	P = First(L);
-	max = Info(P);
-	while(P != LNil){
-		if(max < Info(P)){
-			max = Info(P);
-		}
-		P = Next(P);
-	}
-
-	return max;
-}
-
-/****************** PROSES TERHADAP LIST ******************/
-void Konkat1 (List *L1, List *L2, List *L3){
-	/* I.S. L1 dan L2 sembarang */
-	/* F.S. L1 dan L2 kosong, L3 adalah hasil konkatenasi L1 & L2 */
-	/* Konkatenasi dua buah list : L1 dan L2    */
-	/* menghasilkan L3 yang baru (dengan elemen list L1 dan L2) */
-	/* dan L1 serta L2 menjadi list kosong.*/
-	/* Tidak ada alokasi/dealokasi pada prosedur ini */
-
-	addressL Last;
-
-	Last = First(*L1);
-
-	if(IsLEmpty(*L1)){
-		First(*L1)=First(*L2);
-	}
-	else{
-		while(Next(Last) != LNil){
-			Last = Next(Last);
-		}
-		Next(Last) = First(*L2);
-	}
-
-	First(*L3) = First(*L1);
-	First(*L1) = LNil;
-	First(*L2) = LNil;
-}
 
 void PrintListBangunan(List L, TabBangunan T){
 	/* Mencetak bangunan-bangunan pada TabBangunan yang indeksnya ada pada List L */
