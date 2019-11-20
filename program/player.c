@@ -374,3 +374,20 @@ void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta){
 	}
 }
 
+boolean IsSkill2(Player P) {
+	return NbElmt(L(P)) == 2; /* Masih ada kemungkinan salah karena skill2 didapat kalau jumlah bangunan pemain berkurang sebanyak tepat 1 */
+}
+/* Mengembalikan true apabila kondisi memenuhi untuk menambah skill 2 : shield ke dalam queue */
+
+/*boolean IsSkill3(); */
+/* Mengembalikan true apabila kondisi memenuhi untuk menambah skill 3 : extra turn ke dalam queue */
+/*boolean IsSkill4(); */
+/* Mengembalikan true apabila kondisi memenuhi untuk menambah skill 4 : attack up ke dalam queue */
+/*boolean IsSkill5(); */
+/* Mengembalikan true apabila kondisi memenuhi untuk menambah skill 5 : critical hit ke dalam queue */
+/*boolean IsSkill6(); */
+/* Mengembalikan true apabila kondisi memenuhi untuk menambah skill 6 : instant reinforcement ke dalam queue */
+boolean IsSkill7(Player P) {
+	return NbElmt(L(P)) == 10; /* Masih ada kemungkinan salah karena skill7 didapat jika jumlah bangunan bertambah menjadi 10 */
+}
+/* Mengembalikan true apabila kondisi memenuhi untuk menambah skill 7 : barrage ke dalam queue */
