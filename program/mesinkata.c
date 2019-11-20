@@ -230,3 +230,17 @@ boolean IsKataEXIT(Kata K){
 
 	return IsKataSama(K, KataEXIT);
 }
+
+
+boolean IsKataSTATUS(Kata K){
+	Kata KataSTATUS;
+	KataSTATUS.Length = 6;
+	KataSTATUS.TabKata[1] = 'S';
+	KataSTATUS.TabKata[2] = 'T';
+	KataSTATUS.TabKata[3] = 'A';
+	KataSTATUS.TabKata[4] = 'T';
+	KataSTATUS.TabKata[5] = 'U';
+	KataSTATUS.TabKata[6] = 'S';
+
+	return IsKataSama(K, KataSTATUS);
+}

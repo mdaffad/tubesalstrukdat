@@ -3,13 +3,11 @@
 /* TOP adalah alamat elemen puncak */
 /* Implementasi dalam bahasa C dengan alokasi statik */
 
-#include "stackt.h"
-#include "boolean.h"
 #include "bangunan.h"
+#include "boolean.h"
+#include "arraydinpos.h"
+#include "stackt.h"
 
-
-typedef Bangunan infostack;
-typedef int address;   /* indeks tabel */
 
 /* ************ Prototype ************ */
 /* *** Konstruktor/Kreator *** */
@@ -58,6 +56,14 @@ void Pop (Stack * S, infostack* X){
 }
 
 /* ************ Lainnya ************ */
+infostack InfoUndef(){
+	/* Mengirimkan nilai info undef dengan spesifikasi B(X) = BUndef() dan Idx(X) -1 */
+	infostack X;
+	Idx(X) = -1;
+	B(X) = BUndef();
+	return X;
+}
+
 void PushUndef(Stack * S){
 	/* Menambahkan BUndef sebagai elemen Stack S. */
 	/* I.S. S mungkin kosong, tabel penampung elemen stack TIDAK penuh */
@@ -69,6 +75,27 @@ void PushUndef(Stack * S){
 	else{
 		Top(*S)++;
 	}
-	InfoTop(*S) = BUndef();
+	InfoTop(*S) = InfoUndef();
 }
 
+void PushBangunan (Stack * S, Bangunan B, int index){
+	/* Menambahkan elemen Stack S dengan infostack B(X) = B, Idx(X) = index */
+	/* I.S. S mungkin kosong, tabel penampung elemen stack TIDAK penuh */
+	/* F.S. X menjadi TOP yang baru,TOP bertambah 1 */
+	infostack X;
+	Idx(X) = index;
+	B(X) = B;
+
+	Push(S, X);
+}
+
+void PopBangunan (Stack * S, Bangunan *B, int *index){
+	/* Menghapus X dari Stack S. X adalah infostack B(X) = B, Idx(X) = index */
+	/* I.S. S  tidak mungkin kosong */
+	/* F.S. X adalah nilai elemen TOP yang lama, TOP berkurang 1 */
+	infostack X;
+
+	Pop(S, &X);
+	*B = B(X);
+	*index = Idx(X);
+}

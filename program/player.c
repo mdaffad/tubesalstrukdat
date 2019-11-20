@@ -32,6 +32,18 @@ void DelIdxBangunan(Player *P, int Idx){
 	DelP(&L(*P), Idx);
 }
 
+void UpdateLBangunan(Player *P, TabBangunan T){
+	int i;
+
+	LCreateEmpty(&L(*P));
+
+	for(i=GetFirstIdx(T);i<=(GetLastIdx(T));i++){
+		if(Pemilik(TabElmt(T, i)) == Kode(*P)){
+			AddIdxBangunan(P, i);
+		}
+	}
+}
+
 void UpdatePasukan(TabBangunan *T, Player P){
 	int i;
 
@@ -123,11 +135,14 @@ void IdxFromAdjacentBangunan(int indeksInput, Player P, TabBangunan T, int *idx,
 	
 }
 
-void DoLevelUp(int idx, TabBangunan T){
+void DoLevelUp(int idx, TabBangunan T, Stack *S){
 	Bangunan *B;
 	B = &TabElmt(T, idx);
 
 	if(CheckLevelUp(*B)){
+		PushUndef(S);
+		PushBangunan(S, TabElmt(T, idx), idx);
+
 		LevelUp(B);
 		printf("Level ");
 		PrintNama(*B);
@@ -150,11 +165,15 @@ void TransferPemilik(int idxB, Player *PCurrent, Player *PEnemy, TabBangunan T){
 	AddIdxBangunan(PCurrent, idxB);
 }
 
-void DoAttack(int idxB1, int idxB2, Player *PCurrent, Player *PEnemy, TabBangunan T){
+void DoAttack(int idxB1, int idxB2, Player *PCurrent, Player *PEnemy, TabBangunan T, Stack *S){
 	// B1 menyerang B2
 	int N;
 	Bangunan *B1 = &TabElmt(T, idxB1);
 	Bangunan *B2 = &TabElmt(T, idxB2);
+
+	PushUndef(S);
+	PushBangunan(S, *B1, idxB1);
+	PushBangunan(S, *B2, idxB2);
 
 	printf("Jumlah pasukan: ");
 	scanf("%d", &N);
@@ -197,12 +216,16 @@ void DoAttack(int idxB1, int idxB2, Player *PCurrent, Player *PEnemy, TabBanguna
 	}
 }
 
-void DoMove(int idxB1, int idxB2, TabBangunan T){
+void DoMove(int idxB1, int idxB2, TabBangunan T, Stack *S){
 
 	// pasukan B1 bergerak ke B2
 	int N;
 	Bangunan *B1 = &TabElmt(T, idxB1);
 	Bangunan *B2 = &TabElmt(T, idxB2);
+
+	PushUndef(S);
+	PushBangunan(S, *B1, idxB1);
+	PushBangunan(S, *B2, idxB2);
 
 	printf("Jumlah pasukan: ");
 	scanf("%d", &N);
@@ -299,10 +322,14 @@ void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta){
 	int idx;
 	int idx2;
 	boolean ExtraTurn;
-	// create empty stack per turn bcs stack cant go over turn
+	boolean mayUndo;
+	Stack S;
+	Bangunan tmpB;
 
 
+	mayUndo = true;
 	ExtraTurn = false;
+	SCreateEmpty(&S);
 	UpdatePasukan(T, *PCurrent);
 	ResetAttackMove(T);
 
@@ -331,7 +358,7 @@ void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta){
 					IdxFromAdjacentBangunan(idx, *PCurrent, *T, &idx2, "Daftar bangunan yang dapat diserang", "Bangunan yang diserang", false);
 				}
 				if(idx != -1 && idx2 != -1){
-					DoAttack(idx, idx2, PCurrent, PEnemy, *T);
+					DoAttack(idx, idx2, PCurrent, PEnemy, *T, &S);
 				}
 			}
 			else{
@@ -341,8 +368,7 @@ void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta){
 		}
 		else if(IsKataLEVEL_UP(CKata)){
 			IdxFromDaftarBangunan(*PCurrent, *T, &idx, "Daftar Bangunan", "Bangunan yang akan di level up");
-			// printf("%d\n", idx);
-			DoLevelUp(idx, *T);
+			DoLevelUp(idx, *T, &S);
 			getchar();
 		}
 		else if(IsKataMOVE(CKata)){
@@ -352,7 +378,7 @@ void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta){
 					IdxFromAdjacentBangunan(idx, *PCurrent, *T, &idx2, "Daftar bangunan terdekat", "Bangunan yang akan menerima", true);
 				}
 				if(idx != -1 && idx2 != -1){
-					DoMove(idx, idx2, *T);
+					DoMove(idx, idx2, *T, &S);
 				}
 			}
 			else{
@@ -365,15 +391,52 @@ void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta){
 				printf("Skill tidak tersedia.\n");
 			}
 			else{
+				mayUndo = false;
 				DoSkill(PCurrent, PEnemy, T, &ExtraTurn);
 			}
 			// printf("skill not implemented yet\n");
 		}
 		else if(IsKataUNDO(CKata)){
-			printf("undo not implemented yet\n");
+			// 
+			if(mayUndo){
+				if(IsSEmpty(S)){
+					printf("Mau nge-UNDO paan si :(\n");
+				}
+				else{
+					do {
+						PopBangunan(&S, &tmpB, &idx);
+						if(idx != -1){
+							TabElmt(*T, idx) = tmpB;
+						}
+					} while(idx != -1);
+
+					UpdateLBangunan(PCurrent, *T);
+					UpdateLBangunan(PEnemy, *T);
+
+					printf("UNDO berhasil dilakukan!\n");
+				}
+			}
+			else{
+				printf("Anda sudah menggunakan SKILL dan tidak bisa UNDO lagi!\n");
+			}
+			
+
 		}
 		else if(IsKataSAVE(CKata)){
 			printf("save not implemented yet\n");
+		}
+		else if(IsKataSTATUS(CKata)){
+			printf("\n");
+			PrintPeta(Peta, *T);
+			printf("Player %d\n", Kode(*PCurrent));
+			PrintListBangunan(L(*PCurrent), *T);
+			printf("Skill Available: "); 
+			if(!IsQEmpty(Q(*PCurrent))){
+				PrintSkillName(InfoHead(Q(*PCurrent))); printf("\n\n");
+			}
+			else{
+				printf("-\n\n");
+			}
 		}
 		else{
 			printf("INPUT YG BENER LAH\n");

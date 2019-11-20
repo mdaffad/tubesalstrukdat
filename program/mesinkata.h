@@ -78,4 +78,6 @@ boolean IsKataMOVE(Kata K);
 
 boolean IsKataEXIT(Kata K);
 
+boolean IsKataSTATUS(Kata K);
+
 #endif

@@ -12,13 +12,18 @@
 
 #include "bangunan.h"
 #include "boolean.h"
+#include "arraydinpos.h"
 
 #define SNil 0
 #define SMaxEl 200
 /* SNil adalah stack dengan elemen kosong . */
 /* Karena indeks dalam bhs C dimulai 0 maka tabel dg indeks 0 tidak dipakai */
 
-typedef Bangunan infostack;
+typedef struct {
+	Bangunan B;
+	int index;
+} infostack;
+
 typedef int address;   /* indeks tabel */
 
 /* Contoh deklarasi variabel bertype stack dengan ciri TOP : */
@@ -34,8 +39,12 @@ typedef struct {
    /* S.TOP adalah alamat elemen TOP */
 
 /* Definisi akses dengan Selektor : Set dan Get */
+#define B(X) (X).B
+#define Idx(X) (X).index
+
 #define Top(S) (S).TOP
 #define InfoTop(S) (S).T[(S).TOP]
+
 
 /* ************ Prototype ************ */
 /* *** Konstruktor/Kreator *** */
@@ -65,10 +74,24 @@ void Pop (Stack * S, infostack* X);
 
 
 /* ************ Lainnya ************ */
+infostack InfoUndef();
+	/* Mengirimkan nilai info undef dengan spesifikasi B(I) = BUndef() dan Idx(I) -1 */
+
+
 void PushUndef(Stack * S);
-/* Menambahkan BUndef sebagai elemen Stack S. */
+/* Menambahkan BUndef dengan index -1 sebagai elemen Stack S. */
 /* I.S. S mungkin kosong, tabel penampung elemen stack TIDAK penuh */
 /* F.S. Undef menjadi TOP yang baru,TOP bertambah 1 */
 /* Aplikasi untuk batasan UNDO */
+
+void PushBangunan (Stack * S, Bangunan B, int index);
+/* Menambahkan elemen Stack S dengan infostack B(X) = B, Idx(X) = index */
+/* I.S. S mungkin kosong, tabel penampung elemen stack TIDAK penuh */
+/* F.S. X menjadi TOP yang baru,TOP bertambah 1 */
+
+void PopBangunan (Stack * S, Bangunan *B, int *index);
+/* Menghapus X dari Stack S. X adalah infostack B(X) = B, Idx(X) = index */
+/* I.S. S  tidak mungkin kosong */
+/* F.S. X adalah nilai elemen TOP yang lama, TOP berkurang 1 */
 
 #endif
