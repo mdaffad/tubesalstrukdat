@@ -17,6 +17,13 @@
 
 #include <stdio.h>
 
+boolean IsSkill2;
+boolean IsSkill3;
+boolean IsSkill4;
+boolean IsSkill5;
+boolean IsSkill6;
+boolean IsSkill7;
+
 void MakePlayer(Player *P, int N){
 	Kode(*P) = N;
 	LCreateEmpty(&L(*P));
@@ -165,7 +172,7 @@ void TransferPemilik(int idxB, Player *PCurrent, Player *PEnemy, TabBangunan T){
 	AddIdxBangunan(PCurrent, idxB);
 }
 
-void DoAttack(int idxB1, int idxB2, Player *PCurrent, Player *PEnemy, TabBangunan T, Stack *S){
+void DoAttack(int idxB1, int idxB2, Player *PCurrent, Player *PEnemy, TabBangunan T, Stack *S, boolean *IsSkill7){
 	// B1 menyerang B2
 	int N;
 	Bangunan *B1 = &TabElmt(T, idxB1);
@@ -190,6 +197,7 @@ void DoAttack(int idxB1, int idxB2, Player *PCurrent, Player *PEnemy, TabBanguna
 		if(N < Pasukan(*B2)){
 			Pasukan(*B2) = Pasukan(*B2) - N;
 			printf("Bangunan gagal direbut.\n");
+			*IsSkill7 = false;
 		}
 		else{
 			// N >= Pasukan(*B2)
@@ -198,12 +206,15 @@ void DoAttack(int idxB1, int idxB2, Player *PCurrent, Player *PEnemy, TabBanguna
 			UpdateToLevel(B2, 1);
 			TransferPemilik(idxB2, PCurrent, PEnemy, T);
 			printf("Bangunan menjadi milikmu!\n");
+			if(NbElmt(L(*PCurrent)) == 10) *IsSkill7 = true; /* Activate Skill 7*/
+			else *IsSkill7 = false;
 		}
 	}
 	else{
 		if(N < Pasukan(*B2)*4/3){
 			Pasukan(*B2) = Pasukan(*B2) - N*3/4;
 			printf("Bangunan gagal direbut.\n");
+			*IsSkill7 = false;
 		}
 		else{
 			// N >= Pasukan(*B2)*4/3
@@ -212,6 +223,8 @@ void DoAttack(int idxB1, int idxB2, Player *PCurrent, Player *PEnemy, TabBanguna
 			UpdateToLevel(B2, 1);
 			TransferPemilik(idxB2, PCurrent, PEnemy, T);
 			printf("Bangunan menjadi milikmu!\n");
+			if(NbElmt(L(*PCurrent)) == 10) *IsSkill7 = true; /* Activate Skill 7*/
+			else *IsSkill7 = false;
 		}
 	}
 }
@@ -317,6 +330,14 @@ void DoSkill(Player *PCurrent, Player *PEnemy, TabBangunan *T, boolean *ExtraTur
 
 }
 
+void AddSkill(Player *P, boolean IsSkill2, boolean IsSkill3, boolean IsSkill4, boolean IsSkill5, boolean IsSkill6, boolean IsSkill7) {
+	if(IsSkill2) Add(&Q(*P), 2);
+	if(IsSkill3) Add(&Q(*P), 3);
+	if(IsSkill4) Add(&Q(*P), 4);
+	if(IsSkill5) Add(&Q(*P), 5);
+	if(IsSkill6) Add(&Q(*P), 6);
+	if(IsSkill7) Add(&Q(*P), 7);
+}
 
 void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta){
 	int idx;
@@ -325,6 +346,12 @@ void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta){
 	boolean mayUndo;
 	Stack S;
 	Bangunan tmpB;
+	IsSkill2 = false;
+	IsSkill3 = false;
+	IsSkill4 = false;
+	IsSkill5 = false;
+	IsSkill6 = false;
+	IsSkill7 = false;
 
 
 	mayUndo = true;
@@ -358,7 +385,8 @@ void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta){
 					IdxFromAdjacentBangunan(idx, *PCurrent, *T, &idx2, "Daftar bangunan yang dapat diserang", "Bangunan yang diserang", false);
 				}
 				if(idx != -1 && idx2 != -1){
-					DoAttack(idx, idx2, PCurrent, PEnemy, *T, &S);
+					DoAttack(idx, idx2, PCurrent, PEnemy, *T, &S, &IsSkill7);
+					AddSkill(PEnemy, IsSkill2, IsSkill3, IsSkill4, IsSkill5, IsSkill6, IsSkill7);
 				}
 			}
 			else{
@@ -458,21 +486,3 @@ void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta){
 		printf("ByeBye!\n");
 	}
 }
-
-boolean IsSkill2(Player P) {
-	return NbElmt(L(P)) == 2; /* Masih ada kemungkinan salah karena skill2 didapat kalau jumlah bangunan pemain berkurang sebanyak tepat 1 */
-}
-/* Mengembalikan true apabila kondisi memenuhi untuk menambah skill 2 : shield ke dalam queue */
-
-/*boolean IsSkill3(); */
-/* Mengembalikan true apabila kondisi memenuhi untuk menambah skill 3 : extra turn ke dalam queue */
-/*boolean IsSkill4(); */
-/* Mengembalikan true apabila kondisi memenuhi untuk menambah skill 4 : attack up ke dalam queue */
-/*boolean IsSkill5(); */
-/* Mengembalikan true apabila kondisi memenuhi untuk menambah skill 5 : critical hit ke dalam queue */
-/*boolean IsSkill6(); */
-/* Mengembalikan true apabila kondisi memenuhi untuk menambah skill 6 : instant reinforcement ke dalam queue */
-boolean IsSkill7(Player P) {
-	return NbElmt(L(P)) == 10; /* Masih ada kemungkinan salah karena skill7 didapat jika jumlah bangunan bertambah menjadi 10 */
-}
-/* Mengembalikan true apabila kondisi memenuhi untuk menambah skill 7 : barrage ke dalam queue */
