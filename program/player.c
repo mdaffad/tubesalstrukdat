@@ -172,7 +172,7 @@ void TransferPemilik(int idxB, Player *PCurrent, Player *PEnemy, TabBangunan T){
 	AddIdxBangunan(PCurrent, idxB);
 }
 
-void DoAttack(int idxB1, int idxB2, Player *PCurrent, Player *PEnemy, TabBangunan T, Stack *S, boolean *IsSkill2, boolean *IsSkill7){
+void DoAttack(int idxB1, int idxB2, Player *PCurrent, Player *PEnemy, TabBangunan T, Stack *S, boolean *IsSkill2, boolean *IsSkill3, boolean *IsSkill7){
 	// B1 menyerang B2
 	int N;
 	Bangunan *B1 = &TabElmt(T, idxB1);
@@ -198,6 +198,7 @@ void DoAttack(int idxB1, int idxB2, Player *PCurrent, Player *PEnemy, TabBanguna
 			Pasukan(*B2) = Pasukan(*B2) - N;
 			printf("Bangunan gagal direbut.\n");
 			*IsSkill2 = false;
+			*IsSkill3 = false;
 			*IsSkill7 = false;
 		}
 		else{
@@ -208,6 +209,7 @@ void DoAttack(int idxB1, int idxB2, Player *PCurrent, Player *PEnemy, TabBanguna
 			TransferPemilik(idxB2, PCurrent, PEnemy, T);
 			printf("Bangunan menjadi milikmu!\n");
 			if(NbElmt(L(*PEnemy)) == 2) *IsSkill2 = true;
+			if(Tipe(*B2) == 3) *IsSkill3 = true;
 			if(NbElmt(L(*PCurrent)) == 10) *IsSkill7 = true; /* Activate Skill 7*/
 			else *IsSkill7 = false;
 		}
@@ -389,8 +391,8 @@ void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta){
 					IdxFromAdjacentBangunan(idx, *PCurrent, *T, &idx2, "Daftar bangunan yang dapat diserang", "Bangunan yang diserang", false);
 				}
 				if(idx != -1 && idx2 != -1){
-					DoAttack(idx, idx2, PCurrent, PEnemy, *T, &S, &IsSkill2, &IsSkill7);
-					AddSkill(PEnemy, IsSkill2, 0, 0, 0, 0, IsSkill7);
+					DoAttack(idx, idx2, PCurrent, PEnemy, *T, &S, &IsSkill2, &IsSkill3, &IsSkill7);
+					AddSkill(PEnemy, IsSkill2, IsSkill3, 0, 0, 0, IsSkill7);
 				}
 			}
 			else{
