@@ -17,13 +17,6 @@
 
 #include <stdio.h>
 
-boolean IsSkill2;
-boolean IsSkill3;
-boolean IsSkill4;
-boolean IsSkill5;
-boolean IsSkill6;
-boolean IsSkill7;
-
 void MakePlayer(Player *P, int N){
 	Kode(*P) = N;
 	LCreateEmpty(&L(*P));
@@ -172,7 +165,7 @@ void TransferPemilik(int idxB, Player *PCurrent, Player *PEnemy, TabBangunan T){
 	AddIdxBangunan(PCurrent, idxB);
 }
 
-void DoAttack(int idxB1, int idxB2, Player *PCurrent, Player *PEnemy, TabBangunan T, Stack *S, boolean *IsSkill2, boolean *IsSkill3, boolean *IsSkill7){
+void DoAttack(int idxB1, int idxB2, Player *PCurrent, Player *PEnemy, TabBangunan T, Stack *S){
 	// B1 menyerang B2
 	int N;
 	Bangunan *B1 = &TabElmt(T, idxB1);
@@ -197,9 +190,6 @@ void DoAttack(int idxB1, int idxB2, Player *PCurrent, Player *PEnemy, TabBanguna
 		if(N < Pasukan(*B2)){
 			Pasukan(*B2) = Pasukan(*B2) - N;
 			printf("Bangunan gagal direbut.\n");
-			*IsSkill2 = false;
-			*IsSkill3 = false;
-			*IsSkill7 = false;
 		}
 		else{
 			// N >= Pasukan(*B2)
@@ -208,18 +198,24 @@ void DoAttack(int idxB1, int idxB2, Player *PCurrent, Player *PEnemy, TabBanguna
 			UpdateToLevel(B2, 1);
 			TransferPemilik(idxB2, PCurrent, PEnemy, T);
 			printf("Bangunan menjadi milikmu!\n");
-			if(NbElmt(L(*PEnemy)) == 2) *IsSkill2 = true;
-			if(Tipe(*B2) == 3) *IsSkill3 = true;
-			if(NbElmt(L(*PCurrent)) == 10) *IsSkill7 = true; /* Activate Skill 7*/
-			else *IsSkill7 = false;
+			if(NbElmt(L(*PEnemy)) == 2){
+				// Kondisi masih salah, harusnya kalau BERKURANG 1 MENJADI 2
+				Add(&Q(*PEnemy), 2);
+			}
+			if(Tipe(*B2) == 3){
+				// Kondisi masih salah bangunan B2 bisa saja dimiliki 0
+				Add(&Q(*PEnemy), 3);
+			}
+			if(NbElmt(L(*PEnemy)) == 10){
+				// Kondisi masih salah, harusnya kalau BERTAMBAH 1 MENJADI 10
+				Add(&Q(*PCurrent), 7);
+			}
 		}
 	}
 	else{
 		if(N < Pasukan(*B2)*4/3){
 			Pasukan(*B2) = Pasukan(*B2) - N*3/4;
 			printf("Bangunan gagal direbut.\n");
-			*IsSkill2 = false;
-			*IsSkill7 = false;
 		}
 		else{
 			// N >= Pasukan(*B2)*4/3
@@ -229,13 +225,12 @@ void DoAttack(int idxB1, int idxB2, Player *PCurrent, Player *PEnemy, TabBanguna
 			TransferPemilik(idxB2, PCurrent, PEnemy, T);
 			printf("Bangunan menjadi milikmu!\n");
 			if(NbElmt(L(*PEnemy)) == 2){
-				*IsSkill2 = true;
+				// Kondisi masih salah, harusnya kalau BERKURANG 1 MENJADI 2
+				Add(&Q(*PEnemy), 2);
 			}
 			if(NbElmt(L(*PCurrent)) == 10){
-				*IsSkill7 = true; /* Activate Skill 7*/
-			} 
-			else{
-				*IsSkill7 = false;
+				// Kondisi masih salah, harusnya kalau BERTAMBAH 1 MENJADI 10
+				Add(&Q(*PCurrent), 7);
 			} 
 		}
 	}
@@ -342,14 +337,6 @@ void DoSkill(Player *PCurrent, Player *PEnemy, TabBangunan *T, boolean *ExtraTur
 
 }
 
-void AddSkill(Player *P, boolean IsSkill2, boolean IsSkill3, boolean IsSkill4, boolean IsSkill5, boolean IsSkill6, boolean IsSkill7) {
-	if(IsSkill2) Add(&Q(*P), 2);
-	if(IsSkill3) Add(&Q(*P), 3);
-	if(IsSkill4) Add(&Q(*P), 4);
-	if(IsSkill5) Add(&Q(*P), 5);
-	if(IsSkill6) Add(&Q(*P), 6);
-	if(IsSkill7) Add(&Q(*P), 7);
-}
 
 void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta){
 	int idx;
@@ -358,13 +345,6 @@ void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta){
 	boolean mayUndo;
 	Stack S;
 	Bangunan tmpB;
-	IsSkill2 = false;
-	IsSkill3 = false;
-	IsSkill4 = false;
-	IsSkill5 = false;
-	IsSkill6 = false;
-	IsSkill7 = false;
-
 
 	mayUndo = true;
 	ExtraTurn = false;
@@ -397,8 +377,7 @@ void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta){
 					IdxFromAdjacentBangunan(idx, *PCurrent, *T, &idx2, "Daftar bangunan yang dapat diserang", "Bangunan yang diserang", false);
 				}
 				if(idx != -1 && idx2 != -1){
-					DoAttack(idx, idx2, PCurrent, PEnemy, *T, &S, &IsSkill2, &IsSkill3, &IsSkill7);
-					AddSkill(PEnemy, IsSkill2, IsSkill3, 0, 0, 0, IsSkill7);
+					DoAttack(idx, idx2, PCurrent, PEnemy, *T, &S);
 				}
 			}
 			else{
