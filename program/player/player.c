@@ -95,7 +95,6 @@ void IdxFromAdjacentBangunan(int indeksInput, Player P, TabBangunan T, int *idx,
 	List tmp;
 	Bangunan tmpBangunan;
 	int i;
-
 	// find adj put in list
 	LCreateEmpty(&tmp);
 	// loop all tab
@@ -168,12 +167,19 @@ void TransferPemilik(int idxB, Player *PCurrent, Player *PEnemy, TabBangunan T){
 void DoAttack(int idxB1, int idxB2, Player *PCurrent, Player *PEnemy, TabBangunan T, Stack *S){
 	// B1 menyerang B2
 	int N;
+	int JmlAwlPlayer;
+	int JmlAkhPlayer;
+	int JmlAwlEnemy;
+	int JmlAkhEnemy;
 	Bangunan *B1 = &TabElmt(T, idxB1);
 	Bangunan *B2 = &TabElmt(T, idxB2);
 
 	PushUndef(S);
 	PushBangunan(S, *B1, idxB1);
 	PushBangunan(S, *B2, idxB2);
+
+	JmlAwlPlayer = NbElmt(L(*PCurrent));
+	JmlAwlEnemy = NbElmt(L(*PEnemy));
 
 	printf("Jumlah pasukan: ");
 	scanf("%d", &N);
@@ -198,17 +204,9 @@ void DoAttack(int idxB1, int idxB2, Player *PCurrent, Player *PEnemy, TabBanguna
 			UpdateToLevel(B2, 1);
 			TransferPemilik(idxB2, PCurrent, PEnemy, T);
 			printf("Bangunan menjadi milikmu!\n");
-			if(NbElmt(L(*PEnemy)) == 2){
-				// Kondisi masih salah, harusnya kalau BERKURANG 1 MENJADI 2
-				Add(&Q(*PEnemy), 2);
-			}
 			if(Tipe(*B2) == 3){
 				// Kondisi masih salah bangunan B2 bisa saja dimiliki 0
 				Add(&Q(*PEnemy), 3);
-			}
-			if(NbElmt(L(*PEnemy)) == 10){
-				// Kondisi masih salah, harusnya kalau BERTAMBAH 1 MENJADI 10
-				Add(&Q(*PCurrent), 7);
 			}
 		}
 	}
@@ -223,17 +221,15 @@ void DoAttack(int idxB1, int idxB2, Player *PCurrent, Player *PEnemy, TabBanguna
 			// TRANSFER PEMILIK
 			UpdateToLevel(B2, 1);
 			TransferPemilik(idxB2, PCurrent, PEnemy, T);
-			printf("Bangunan menjadi milikmu!\n");
-			if(NbElmt(L(*PEnemy)) == 2){
-				// Kondisi masih salah, harusnya kalau BERKURANG 1 MENJADI 2
-				Add(&Q(*PEnemy), 2);
-			}
-			if(NbElmt(L(*PCurrent)) == 10){
-				// Kondisi masih salah, harusnya kalau BERTAMBAH 1 MENJADI 10
-				Add(&Q(*PCurrent), 7);
-			} 
+			printf("Bangunan menjadi milikmu!\n"); 
 		}
 	}
+
+	JmlAkhPlayer = NbElmt(L(*PCurrent));
+	JmlAkhEnemy = NbElmt(L(*PEnemy));
+
+	if(JmlAkhEnemy == 2 && JmlAkhEnemy - JmlAwlEnemy == -1) Add(&Q(*PEnemy), 2);
+	if(JmlAkhPlayer == 10 && JmlAkhPlayer - JmlAwlPlayer == 1) Add(&Q(*PEnemy), 7);
 }
 
 void DoMove(int idxB1, int idxB2, TabBangunan T, Stack *S){
