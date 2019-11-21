@@ -336,10 +336,25 @@ void DoSkill(Player *PCurrent, Player *PEnemy, TabBangunan *T, boolean *ExtraTur
 
 }
 
+boolean IsSkill6(Player P) {
+	boolean cek;
+	List L;
+	addressL tmp;
+
+	L = L(P); 
+	tmp = First(L);
+	cek = true;
+	while(cek && tmp!=LNil){
+		if(Info(tmp) != 4) cek = false;
+		else tmp = Next(tmp);
+	}
+	return cek;
+}
 
 void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta){
 	int idx;
 	int idx2;
+	int i;
 	boolean ExtraTurn;
 	boolean mayUndo;
 	Stack S;
@@ -411,6 +426,7 @@ void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta){
 			else{
 				mayUndo = false;
 				DoSkill(PCurrent, PEnemy, T, &ExtraTurn);
+				if(ExtraTurn) Add(&Q(*PEnemy), 5); // CRITICAL HIT ACTIVATED
 			}
 			// printf("skill not implemented yet\n");
 		}
@@ -464,6 +480,7 @@ void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta){
 	}
 
 	if(IsKataEND_TURN(CKata)){
+		if(IsSkill6(*PCurrent)) Add(&Q(*PCurrent), 6);
 		if(ExtraTurn){
 			TakeTurn(PCurrent, PEnemy, T, Peta);
 		}
