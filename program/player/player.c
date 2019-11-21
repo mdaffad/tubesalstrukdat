@@ -82,6 +82,7 @@ void IdxFromDaftarBangunan(Player P, TabBangunan T, int *idx, char *PesanDaftar,
 
 		*idx = GetAtIdx(L(P), choice);
 	}
+
 	else{
 		printf("Tidak ada bangunan.\n");
 		*idx = -1;
@@ -336,17 +337,17 @@ void DoSkill(Player *PCurrent, Player *PEnemy, TabBangunan *T, boolean *ExtraTur
 
 }
 
-boolean IsSkill6(Player P) {
+boolean IsSkill6(Player P, TabBangunan T) {
+	int i;
+	Bangunan tmpB;
 	boolean cek;
-	List L;
-	addressL tmp;
 
-	L = L(P); 
-	tmp = First(L);
+	i=GetFirstIdx(T);
 	cek = true;
-	while(cek && tmp!=LNil){
-		if(Info(tmp) != 4) cek = false;
-		else tmp = Next(tmp);
+	while(cek && i<=GetLastIdx(T)) {
+		tmpB = TabElmt(T,i);
+		if(Pemilik(tmpB) == Kode(P) && Lvl(tmpB) != 4) cek = false;
+		i++;
 	}
 	return cek;
 }
@@ -480,7 +481,7 @@ void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta){
 	}
 
 	if(IsKataEND_TURN(CKata)){
-		if(IsSkill6(*PCurrent)) Add(&Q(*PCurrent), 6);
+		if(IsSkill6(*PCurrent, *T)) Add(&Q(*PCurrent), 6);
 		if(ExtraTurn){
 			TakeTurn(PCurrent, PEnemy, T, Peta);
 		}
