@@ -61,23 +61,33 @@ void BacaInput();
 /* Membaca input */
 
 boolean IsKataSama(Kata K1, Kata K2);
+/* Menentukan apakah kedua kata sama, mengirimkan true jika kedua kata sama, false jika tidak */
 
 boolean IsKataATTACK(Kata K);
+/* Menentukan apakah kata yang diinput sama dengan kata 'ATTACK', mengirimkan true jika kedua kata sama, false jika tidak */
 
 boolean IsKataLEVEL_UP(Kata K);
+/* Menentukan apakah kata yang diinput sama dengan kata 'LEVEL_UP', mengirimkan true jika kedua kata sama, false jika tidak */
 
 boolean IsKataSKILL(Kata K);
+/* Menentukan apakah kata yang diinput sama dengan kata 'SKILL', mengirimkan true jika kedua kata sama, false jika tidak */
 
 boolean IsKataUNDO(Kata K);
+/* Menentukan apakah kata yang diinput sama dengan kata 'UNDO', mengirimkan true jika kedua kata sama, false jika tidak */
 
 boolean IsKataEND_TURN(Kata K);
+/* Menentukan apakah kata yang diinput sama dengan kata 'END_TURN', mengirimkan true jika kedua kata sama, false jika tidak */
 
 boolean IsKataSAVE(Kata K);
+/* Menentukan apakah kata yang diinput sama dengan kata 'SAVE', mengirimkan true jika kedua kata sama, false jika tidak */
 
 boolean IsKataMOVE(Kata K);
+/* Menentukan apakah kata yang diinput sama dengan kata 'MOVE', mengirimkan true jika kedua kata sama, false jika tidak */
 
 boolean IsKataEXIT(Kata K);
+/* Menentukan apakah kata yang diinput sama dengan kata 'EXIT', mengirimkan true jika kedua kata sama, false jika tidak */
 
 boolean IsKataSTATUS(Kata K);
+/* Menentukan apakah kata yang diinput sama dengan kata 'STATUS', mengirimkan true jika kedua kata sama, false jika tidak */
 
 #endif
