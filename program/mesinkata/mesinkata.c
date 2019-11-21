@@ -100,6 +100,7 @@ char BacaHuruf(){
 }
 
 void BacaInput(){
+	/* Membaca input */
 	int i=1;
 	/* Membaca input */
 
@@ -112,6 +113,7 @@ void BacaInput(){
 }
 
 boolean IsKataSama(Kata K1, Kata K2){
+	/* Menentukan apakah kedua kata sama, mengirimkan true jika kedua kata sama, false jika tidak */
 	boolean sama;
 	int i;
 
@@ -132,6 +134,7 @@ boolean IsKataSama(Kata K1, Kata K2){
 }
 
 boolean IsKataATTACK(Kata K){
+	/* Menentukan apakah kata yang diinput sama dengan kata 'ATTACK', mengirimkan true jika kedua kata sama, false jika tidak */
 	Kata KataATTACK;
 	KataATTACK.Length = 6;
 	KataATTACK.TabKata[1] = 'A';
@@ -145,6 +148,7 @@ boolean IsKataATTACK(Kata K){
 }
 
 boolean IsKataLEVEL_UP(Kata K){
+	/* Menentukan apakah kata yang diinput sama dengan kata 'LEVEL_UP', mengirimkan true jika kedua kata sama, false jika tidak */
 	Kata KataLEVEL_UP;
 	KataLEVEL_UP.Length = 8;
 	KataLEVEL_UP.TabKata[1] = 'L';
@@ -160,6 +164,7 @@ boolean IsKataLEVEL_UP(Kata K){
 }
 
 boolean IsKataSKILL(Kata K){
+	/* Menentukan apakah kata yang diinput sama dengan kata 'SKILL', mengirimkan true jika kedua kata sama, false jika tidak */
 	Kata KataSKILL;
 	KataSKILL.Length = 5;
 	KataSKILL.TabKata[1] = 'S';
@@ -172,6 +177,7 @@ boolean IsKataSKILL(Kata K){
 }
 
 boolean IsKataUNDO(Kata K){
+	/* Menentukan apakah kata yang diinput sama dengan kata 'UNDO', mengirimkan true jika kedua kata sama, false jika tidak */
 	Kata KataUNDO;
 	KataUNDO.Length = 4;
 	KataUNDO.TabKata[1] = 'U';
@@ -184,6 +190,7 @@ boolean IsKataUNDO(Kata K){
 
 
 boolean IsKataEND_TURN(Kata K){
+	/* Menentukan apakah kata yang diinput sama dengan kata 'END_TURN', mengirimkan true jika kedua kata sama, false jika tidak */
 	Kata KataEND_TURN;
 	KataEND_TURN.Length = 8;
 	KataEND_TURN.TabKata[1] = 'E';
@@ -199,6 +206,7 @@ boolean IsKataEND_TURN(Kata K){
 }
 
 boolean IsKataSAVE(Kata K){
+	/* Menentukan apakah kata yang diinput sama dengan kata 'SAVE', mengirimkan true jika kedua kata sama, false jika tidak */
 	Kata KataSAVE;
 	KataSAVE.Length = 4;
 	KataSAVE.TabKata[1] = 'S';
@@ -210,6 +218,7 @@ boolean IsKataSAVE(Kata K){
 }
 
 boolean IsKataMOVE(Kata K){
+	/* Menentukan apakah kata yang diinput sama dengan kata 'MOVE', mengirimkan true jika kedua kata sama, false jika tidak */
 	Kata KataMOVE;
 	KataMOVE.Length = 4;
 	KataMOVE.TabKata[1] = 'M';
@@ -221,6 +230,7 @@ boolean IsKataMOVE(Kata K){
 }
 
 boolean IsKataEXIT(Kata K){
+	/* Menentukan apakah kata yang diinput sama dengan kata 'EXIT', mengirimkan true jika kedua kata sama, false jika tidak */
 	Kata KataEXIT;
 	KataEXIT.Length = 4;
 	KataEXIT.TabKata[1] = 'E';
@@ -233,6 +243,7 @@ boolean IsKataEXIT(Kata K){
 
 
 boolean IsKataSTATUS(Kata K){
+	/* Menentukan apakah kata yang diinput sama dengan kata 'STATUS', mengirimkan true jika kedua kata sama, false jika tidak */
 	Kata KataSTATUS;
 	KataSTATUS.Length = 6;
 	KataSTATUS.TabKata[1] = 'S';
