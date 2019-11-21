@@ -15,11 +15,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void BacaConfig(TabBangunan *T, MATRIKS *Peta, Player *P1, Player *P2){
+void BacaConfig(TabBangunan *T, MATRIKS *Peta, Player *P1, Player *P2, Graph *G){
 	int N, M, B;
 	int x, y, tipe;
-	int i;
+	int i, j;
 	char c;
+	adrNode Pn;
 	Bangunan tmp;
 
 	STARTKATA();
@@ -54,8 +55,24 @@ void BacaConfig(TabBangunan *T, MATRIKS *Peta, Player *P1, Player *P2){
 		TabElmt(*T, i) = tmp;
 	}
 
+	CreateGraph(0, G);
+
+	// Inisialisasi Node 1 - B
+	for(i=1; i<=B; i++){
+		InsertNode(G, i, &Pn);
+	}
+
+	// Sambungkan jika pada matrix angka 1
+	for(i=1; i<=B; i++){
+		for(j=1; j<=B; j++){
+			x = BacaAngka();
+			if(x==1){
+				Connect(G, i, j);
+			}
+		}
+	}
+
 	FillPeta(Peta, *T);
-	// printf("%d\n", IsBUndef(BUndef()));
 
 }
 
@@ -79,6 +96,7 @@ int main(){
 	Player P1, P2;
 	MATRIKS Peta;
 	TabBangunan T;
+	Graph G;
 	int choice;
 
 	menuAwal(&choice);
@@ -86,8 +104,8 @@ int main(){
 	switch(choice){
 		case 1: {
 			printf("start!\n");
-			BacaConfig(&T, &Peta, &P1, &P2);
-			TakeTurn(&P1, &P2, &T, Peta);
+			BacaConfig(&T, &Peta, &P1, &P2, &G);
+			TakeTurn(&P1, &P2, &T, Peta, G);
 			break;
 		}
 		case 2: {

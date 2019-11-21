@@ -90,7 +90,7 @@ void IdxFromDaftarBangunan(Player P, TabBangunan T, int *idx, char *PesanDaftar,
 	
 }
 
-void IdxFromAdjacentBangunan(int indeksInput, Player P, TabBangunan T, int *idx, char *PesanDaftar, char *PesanInput, boolean self){
+void IdxFromAdjacentBangunan(int indeksInput, Player P, TabBangunan T, int *idx, char *PesanDaftar, char *PesanInput, boolean self, Graph G){
 	// jika self=true, bangunan milik sendiri
 	int choice;
 	List tmp;
@@ -102,12 +102,12 @@ void IdxFromAdjacentBangunan(int indeksInput, Player P, TabBangunan T, int *idx,
 	for(i=1; i<=TabNbElmt(T); i++){
 		tmpBangunan = TabElmt(T, i);
 		if(self){
-			if(Pemilik(tmpBangunan) == Kode(P) && isConnected(indeksInput, i)){
+			if(Pemilik(tmpBangunan) == Kode(P) && isConnected(G, indeksInput, i)){
 				InsVLast(&tmp, i);
 			}
 		}
 		else{
-			if(Pemilik(tmpBangunan) != Kode(P) && isConnected(indeksInput, i)){
+			if(Pemilik(tmpBangunan) != Kode(P) && isConnected(G, indeksInput, i)){
 				InsVLast(&tmp, i);
 			}
 		}
@@ -352,7 +352,7 @@ boolean IsSkill6(Player P, TabBangunan T) {
 	return cek;
 }
 
-void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta){
+void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta, Graph G){
 	int idx;
 	int idx2;
 	int i;
@@ -389,7 +389,7 @@ void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta){
 			IdxFromDaftarBangunan(*PCurrent, *T, &idx, "Daftar Bangunan", "Bangunan yang digunakan untuk menyerang");
 			if(!hasAttacked(TabElmt(*T, idx))){
 				if(idx != -1){
-					IdxFromAdjacentBangunan(idx, *PCurrent, *T, &idx2, "Daftar bangunan yang dapat diserang", "Bangunan yang diserang", false);
+					IdxFromAdjacentBangunan(idx, *PCurrent, *T, &idx2, "Daftar bangunan yang dapat diserang", "Bangunan yang diserang", false, G);
 				}
 				if(idx != -1 && idx2 != -1){
 					DoAttack(idx, idx2, PCurrent, PEnemy, *T, &S);
@@ -409,7 +409,7 @@ void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta){
 			IdxFromDaftarBangunan(*PCurrent, *T, &idx, "Daftar Bangunan", "Pilih bangunan");
 			if(!hasMoved(TabElmt(*T, idx))){
 				if(idx != -1){
-					IdxFromAdjacentBangunan(idx, *PCurrent, *T, &idx2, "Daftar bangunan terdekat", "Bangunan yang akan menerima", true);
+					IdxFromAdjacentBangunan(idx, *PCurrent, *T, &idx2, "Daftar bangunan terdekat", "Bangunan yang akan menerima", true, G);
 				}
 				if(idx != -1 && idx2 != -1){
 					DoMove(idx, idx2, *T, &S);
@@ -483,10 +483,10 @@ void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta){
 	if(IsKataEND_TURN(CKata)){
 		if(IsSkill6(*PCurrent, *T)) Add(&Q(*PCurrent), 6);
 		if(ExtraTurn){
-			TakeTurn(PCurrent, PEnemy, T, Peta);
+			TakeTurn(PCurrent, PEnemy, T, Peta, G);
 		}
 		else{
-			TakeTurn(PEnemy, PCurrent, T, Peta);
+			TakeTurn(PEnemy, PCurrent, T, Peta, G);
 		}
 		
 	}

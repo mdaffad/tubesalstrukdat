@@ -40,6 +40,6 @@ void IdxFromDaftarBangunan(Player P, TabBangunan T, int *idx, char *PesanDaftar,
 
 void DoLevelUp(int idx, TabBangunan T, Stack *S);
 
-void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta);
+void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta, Graph G);
 
 #endif
