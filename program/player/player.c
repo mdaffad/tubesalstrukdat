@@ -171,6 +171,8 @@ void DoAttack(int idxB1, int idxB2, Player *PCurrent, Player *PEnemy, TabBanguna
 	int JmlAkhPlayer;
 	int JmlAwlEnemy;
 	int JmlAkhEnemy;
+	boolean IsEnemysFort = false;
+	boolean IsAttackSuccess = false;
 	Bangunan *B1 = &TabElmt(T, idxB1);
 	Bangunan *B2 = &TabElmt(T, idxB2);
 
@@ -180,6 +182,8 @@ void DoAttack(int idxB1, int idxB2, Player *PCurrent, Player *PEnemy, TabBanguna
 
 	JmlAwlPlayer = NbElmt(L(*PCurrent));
 	JmlAwlEnemy = NbElmt(L(*PEnemy));
+
+	if(Tipe(*B2) == 3 && Pemilik(*B2) != 0) IsEnemysFort = true; /* Diasumsikan hanya perlu di cek apakah for sudah dimiliki karena diasumsikan tidak akan serang bangunan sendiri */
 
 	printf("Jumlah pasukan: ");
 	scanf("%d", &N);
@@ -204,10 +208,7 @@ void DoAttack(int idxB1, int idxB2, Player *PCurrent, Player *PEnemy, TabBanguna
 			UpdateToLevel(B2, 1);
 			TransferPemilik(idxB2, PCurrent, PEnemy, T);
 			printf("Bangunan menjadi milikmu!\n");
-			if(Tipe(*B2) == 3){
-				// Kondisi masih salah bangunan B2 bisa saja dimiliki 0
-				Add(&Q(*PEnemy), 3);
-			}
+			IsAttackSuccess = true;
 		}
 	}
 	else{
@@ -222,6 +223,7 @@ void DoAttack(int idxB1, int idxB2, Player *PCurrent, Player *PEnemy, TabBanguna
 			UpdateToLevel(B2, 1);
 			TransferPemilik(idxB2, PCurrent, PEnemy, T);
 			printf("Bangunan menjadi milikmu!\n"); 
+			IsAttackSuccess = true;
 		}
 	}
 
@@ -229,6 +231,7 @@ void DoAttack(int idxB1, int idxB2, Player *PCurrent, Player *PEnemy, TabBanguna
 	JmlAkhEnemy = NbElmt(L(*PEnemy));
 
 	if(JmlAkhEnemy == 2 && JmlAkhEnemy - JmlAwlEnemy == -1) Add(&Q(*PEnemy), 2);
+	if(IsAttackSuccess && IsEnemysFort) Add(&Q(*PEnemy), 3);
 	if(JmlAkhPlayer == 10 && JmlAkhPlayer - JmlAwlPlayer == 1) Add(&Q(*PEnemy), 7);
 }
 
