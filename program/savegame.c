@@ -10,7 +10,7 @@ int main() {
       exit(1);
    }
    printf("Enter num: ");
-   scanf("%d",&num);
+   scanf("%d",&num); // Jangan lupa dihapus, ini hanya untuk mengetes savegame.c
    fprintf(fptr,"%d",num);
    fclose(fptr);
    return 0;
