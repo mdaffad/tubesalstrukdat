@@ -30,5 +30,11 @@ void ADV();
           Jika  CC = MARK maka EOP akan menyala (true) */
 
 void ADVInput();
+/* Pita dimajukan satu karakter.
+   I.S. : Karakter pada jendela =
+          CC, CC != EOI
+   F.S. : CC adalah karakter berikutnya dari CC yang lama,
+          CC mungkin = MARK.
+          Jika  CC = MARK maka EOP akan menyala (true) */
 
 #endif
