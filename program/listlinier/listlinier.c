@@ -208,6 +208,10 @@ void DelP (List *L, infotype X){
 			else{
 				P=LNil;
 			}
+
+			if(Info(First(*L))==X){
+				DelFirst(L, &P);
+			}
 		}
 		Dealokasi(&P);
 	}

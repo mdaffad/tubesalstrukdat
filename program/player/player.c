@@ -368,18 +368,25 @@ boolean IsSkill6(Player P, TabBangunan T) {
 	return cek;
 }
 
+boolean isGameOver(Player PEnemy){
+	return (NbElmt(L(PEnemy)) == 0);
+}
+
 void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta, Graph G){
 	int idx;
 	int idx2;
 	int i;
 	boolean ExtraTurn;
 	boolean mayUndo;
+	boolean is_cont;
 	Stack S;
 	Bangunan tmpB;
 
+	is_cont = true;
 	mayUndo = true;
 	ExtraTurn = false;
 	SCreateEmpty(&S);
+
 	UpdatePasukan(T, *PCurrent);
 	ResetAttackMove(T);
 
@@ -394,12 +401,11 @@ void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta, Gr
 	else{
 		printf("-\n\n");
 	}
-
 	
 
 	printf("ENTER COMMAND: ");
 	BacaInput();
-	while(!IsKataEND_TURN(CKata) && !IsKataEXIT(CKata)){
+	while(!IsKataEND_TURN(CKata) && !IsKataEXIT(CKata) && is_cont){
 
 		if(IsKataATTACK(CKata)){
 			IdxFromDaftarBangunan(*PCurrent, *T, &idx, "Daftar Bangunan", "Bangunan yang digunakan untuk menyerang");
@@ -415,6 +421,7 @@ void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta, Gr
 				printf("Bangunan telah menyerang giliran ini.\n");
 			}
 			getchar();
+			is_cont = !isGameOver(*PEnemy);
 		}
 		else if(IsKataLEVEL_UP(CKata)){
 			IdxFromDaftarBangunan(*PCurrent, *T, &idx, "Daftar Bangunan", "Bangunan yang akan di level up");
@@ -500,8 +507,11 @@ void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta, Gr
 		else{
 			printf("INPUT YG BENER LAH\n");
 		}
-		printf("ENTER COMMAND: ");
-		BacaInput();
+
+		if(is_cont){
+			printf("ENTER COMMAND: ");
+			BacaInput();
+		}
 	}
 
 	if(IsKataEND_TURN(CKata)){
@@ -520,5 +530,12 @@ void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta, Gr
 	}
 	else if(IsKataEXIT(CKata)){
 		printf("ByeBye!\n");
+	}
+	else if(!is_cont){
+		// MUNGKIN NANTI BISA DIUBAH
+		printf("\n\n");
+		printf("PLAYER "); printf("%d", Kode(*PCurrent)); printf(" WIN\n");
+		printf("PLAYER "); printf("%d", Kode(*PEnemy)); printf(" LOSE\n");
+		printf("\n\n");
 	}
 }
