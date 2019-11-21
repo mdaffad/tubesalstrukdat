@@ -23,7 +23,7 @@ void BacaConfig(TabBangunan *T, MATRIKS *Peta, Player *P1, Player *P2, Graph *G)
 	adrNode Pn;
 	Bangunan tmp;
 
-	STARTKATA();
+	STARTKATA("./bin/config.txt");
 	N = BacaAngka();
 	M = BacaAngka();
 	MakeMATRIKS(N, M, Peta);

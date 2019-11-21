@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include "mesinkata.c"
-#include "boolean.h"
+#include "../mesinkata.c"
+#include "../../boolean/boolean.h"
 
 void menu() {
     printf("*** MESINKATA TEST PROGRAM ***\n");
@@ -40,13 +40,13 @@ int main() {
             }
             case 2: {
                 printf("Membaca angka selanjutnya\n");
-                STARTKATA();
+                STARTKATA("./test.txt");
                 printf("\nBacaAngka: %d\n", BacaAngka());
                 printf("\n");
             }
             case 3: {
                 printf("Membaca karakter selanjutnya\n");
-                STARTKATA();
+                STARTKATA("./test.txt");
                 printf("\nBacaHuruf: %d\n", BacaHuruf());
                 printf("\n");
             }
@@ -54,70 +54,70 @@ int main() {
                 printf("Menentukan apakah kedua kata sama, mengirimkan true jika kedua kata sama, false jika tidak\n");
                 scanf("%c", &K1);
                 scanf("%c", &K2);
-                STARTKATA();
+                STARTKATA("./test.txt");
                 printf("\nIsKataSama: %d\n", IsKataSama(K1, K2));
                 printf("\n");
             }
             case 5: {
                 printf("Menentukan apakah kata yang diinput sama dengan kata 'ATTACK', mengirimkan true jika kedua kata sama, false jika tidak\n");
                 scanf("%c", &K);
-                STARTKATA();               
+                STARTKATA("./test.txt");
                 printf("\nIsKataATTACK: %d\n", IsKataAttack(K));
                 printf("\n");                
             }
             case 6: {
                 printf("Menentukan apakah kata yang diinput sama dengan kata 'LEVEL_UP', mengirimkan true jika kedua kata sama, false jika tidak\n");
                 scanf("%c", &K);
-                STARTKATA();
+                STARTKATA("./test.txt");
                 printf("\nIsKataLEVEL_UP: %d\n", IsKataLEVEL_UP(K));
                 printf("\n");                
             }
             case 7: {
                 printf("Menentukan apakah kata yang diinput sama dengan kata 'SKILL', mengirimkan true jika kedua kata sama, false jika tidak\n");
                 scanf("%c", &K);
-                STARTKATA();
+                STARTKATA("./test.txt");
                 printf("\nIsKataSKILL: %d\n", IsKataSKILL(K));
                 printf("\n");                
             }
             case 8: {
                 printf("Menentukan apakah kata yang diinput sama dengan kata 'UNDO', mengirimkan true jika kedua kata sama, false jika tidak\n");
                 scanf("%c", &K);
-                STARTKATA();
+                STARTKATA("./test.txt");
                 printf("\nIsKataUNDO: %d\n", IsKataUNDO(K));
                 printf("\n");                
             }
             case 9: {
                 printf("Menentukan apakah kata yang diinput sama dengan kata 'END_TURN', mengirimkan true jika kedua kata sama, false jika tidak\n");
                 scanf("%c", &K);
-                STARTKATA();
+                STARTKATA("./test.txt");
                 printf("\nIsKataEND_TURN: %d\n", IsKataEND_TURN(K));
                 printf("\n");                
             }
             case 10: {
                 printf("Menentukan apakah kata yang diinput sama dengan kata 'SAVE', mengirimkan true jika kedua kata sama, false jika tidak\n");
                 scanf("%c", &K);
-                STARTKATA();
+                STARTKATA("./test.txt");
                 printf("\nIsKataSAVE: %d\n", IsKataSAVE(K));
                 printf("\n");
             }
             case 11: {
                 printf("Menentukan apakah kata yang diinput sama dengan kata 'MOVE', mengirimkan true jika kedua kata sama, false jika tidak\n");
                 scanf("%c", &K);
-                STARTKATA();
+                STARTKATA("./test.txt");
                 printf("\nIsKataMOVE: %d\n", IsKataMOVE(K));
                 printf("\n");
             }
             case 12: {
                 printf("Menentukan apakah kata yang diinput sama dengan kata 'EXIT', mengirimkan true jika kedua kata sama, false jika tidak\n");
                 scanf("%c", &K);
-                STARTKATA();
+                STARTKATA("./test.txt");
                 printf("\nIsKataEXIT: %d\n", IsKataEXIT(K));
                 printf("\n");
             }
             case 13: {
                 printf("Menentukan apakah kata yang diinput sama dengan kata 'STATUS', mengirimkan true jika kedua kata sama, false jika tidak\n");
                 scanf("%c", &K);
-                STARTKATA();
+                STARTKATA("./test.txt");
                 printf("\nIsKataSTATUS: %d\n", IsKataSTATUS(K));
                 printf("\n");                
             }

@@ -11,8 +11,8 @@
 extern char CC;
 extern boolean EOP;
 
-void START();
-/* Mesin siap dioperasikan. Pita disiapkan untuk dibaca.
+void START(char* path);
+/* Mesin siap dioperasikan. Pita disiapkan untuk dibaca, path pita pada parameter.
    Karakter pertama yang ada pada pita posisinya adalah pada jendela.
    I.S. : sembarang
    F.S. : CC adalah karakter pertama pada pita
