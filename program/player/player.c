@@ -135,11 +135,13 @@ void IdxFromAdjacentBangunan(int indeksInput, Player P, TabBangunan T, int *idx,
 	
 }
 
-void DoLevelUp(int idx, TabBangunan T, Stack *S){
+void DoLevelUp(int idx, TabBangunan T, Stack *S, Player PCurrent, Player PEnemy){
 	Bangunan *B;
 	B = &TabElmt(T, idx);
 
 	if(CheckLevelUp(*B)){
+		PushQ(S, Q(PCurrent));
+		PushQ(S, Q(PEnemy));
 		PushUndef(S);
 		PushBangunan(S, TabElmt(T, idx), idx);
 
@@ -177,6 +179,8 @@ void DoAttack(int idxB1, int idxB2, Player *PCurrent, Player *PEnemy, TabBanguna
 	Bangunan *B1 = &TabElmt(T, idxB1);
 	Bangunan *B2 = &TabElmt(T, idxB2);
 
+	PushQ(S, Q(*PCurrent));
+	PushQ(S, Q(*PEnemy));
 	PushUndef(S);
 	PushBangunan(S, *B1, idxB1);
 	PushBangunan(S, *B2, idxB2);
@@ -231,18 +235,30 @@ void DoAttack(int idxB1, int idxB2, Player *PCurrent, Player *PEnemy, TabBanguna
 	JmlAkhPlayer = NbElmt(L(*PCurrent));
 	JmlAkhEnemy = NbElmt(L(*PEnemy));
 
-	if(JmlAkhEnemy == 2 && JmlAkhEnemy - JmlAwlEnemy == -1) Add(&Q(*PEnemy), 2);
-	if(IsAttackSuccess && IsEnemysFort) Add(&Q(*PEnemy), 3);
-	if(JmlAkhPlayer == 10 && JmlAkhPlayer - JmlAwlPlayer == 1) Add(&Q(*PEnemy), 7);
+	// CEK KEPENUHAN QUEUE
+	if(JmlAkhEnemy == 2 && JmlAkhEnemy - JmlAwlEnemy == -1){
+		Add(&Q(*PEnemy), 2);
+		printf("Musuhmu mendapat Skill SHIELD!\n");
+	}
+	if(IsAttackSuccess && IsEnemysFort){
+		Add(&Q(*PEnemy), 3);
+		printf("Musuhmu mendapat Skill EXTRA TURN!\n");
+	}
+	if(JmlAkhPlayer == 10 && JmlAkhPlayer - JmlAwlPlayer == 1){
+		Add(&Q(*PEnemy), 7);
+		printf("Musuhmu mendapat Skill BARRAGE!\n");
+	}
 }
 
-void DoMove(int idxB1, int idxB2, TabBangunan T, Stack *S){
+void DoMove(int idxB1, int idxB2, TabBangunan T, Stack *S, Player PCurrent, Player PEnemy){
 
 	// pasukan B1 bergerak ke B2
 	int N;
 	Bangunan *B1 = &TabElmt(T, idxB1);
 	Bangunan *B2 = &TabElmt(T, idxB2);
 
+	PushQ(S, Q(PCurrent));
+	PushQ(S, Q(PEnemy));
 	PushUndef(S);
 	PushBangunan(S, *B1, idxB1);
 	PushBangunan(S, *B2, idxB2);
@@ -402,7 +418,7 @@ void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta, Gr
 		}
 		else if(IsKataLEVEL_UP(CKata)){
 			IdxFromDaftarBangunan(*PCurrent, *T, &idx, "Daftar Bangunan", "Bangunan yang akan di level up");
-			DoLevelUp(idx, *T, &S);
+			DoLevelUp(idx, *T, &S, *PCurrent, *PEnemy);
 			getchar();
 		}
 		else if(IsKataMOVE(CKata)){
@@ -412,7 +428,7 @@ void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta, Gr
 					IdxFromAdjacentBangunan(idx, *PCurrent, *T, &idx2, "Daftar bangunan terdekat", "Bangunan yang akan menerima", true, G);
 				}
 				if(idx != -1 && idx2 != -1){
-					DoMove(idx, idx2, *T, &S);
+					DoMove(idx, idx2, *T, &S, *PCurrent, *PEnemy);
 				}
 			}
 			else{
@@ -427,12 +443,16 @@ void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta, Gr
 			else{
 				mayUndo = false;
 				DoSkill(PCurrent, PEnemy, T, &ExtraTurn);
-				if(ExtraTurn) Add(&Q(*PEnemy), 5); // CRITICAL HIT ACTIVATED
+
+				// CEK KEPENUHAN QUEUE
+				if(ExtraTurn){
+					Add(&Q(*PEnemy), 5); // CRITICAL HIT ACTIVATED
+					printf("Musuhmu mendapat Skill CRITICAL HIT!\n");
+				}
 			}
-			// printf("skill not implemented yet\n");
 		}
 		else if(IsKataUNDO(CKata)){
-			// 
+			// Spesifikasi UNDO ada pada stackt.h
 			if(mayUndo){
 				if(IsSEmpty(S)){
 					printf("Mau nge-UNDO paan si :(\n");
@@ -444,6 +464,10 @@ void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta, Gr
 							TabElmt(*T, idx) = tmpB;
 						}
 					} while(idx != -1);
+					// push sampai ketemu queue
+					PopQ(&S, &Q(*PEnemy));
+					PopQ(&S, &Q(*PCurrent));
+					// selesai pop queue
 
 					UpdateLBangunan(PCurrent, *T);
 					UpdateLBangunan(PEnemy, *T);
@@ -481,7 +505,11 @@ void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta, Gr
 	}
 
 	if(IsKataEND_TURN(CKata)){
-		if(IsSkill6(*PCurrent, *T)) Add(&Q(*PCurrent), 6);
+		// CEK KEPENUHAN QUEUE
+		if(IsSkill6(*PCurrent, *T)){
+			Add(&Q(*PCurrent), 6);
+			printf("Kamu mendapat Skill INSTANT REINFORCEMENT!\n");
+		}
 		if(ExtraTurn){
 			TakeTurn(PCurrent, PEnemy, T, Peta, G);
 		}

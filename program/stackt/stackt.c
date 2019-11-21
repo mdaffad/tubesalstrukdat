@@ -6,6 +6,7 @@
 #include "../bangunan/bangunan.h"
 #include "../boolean/boolean.h"
 #include "../arraydinpos/arraydinpos.h"
+#include "../queue/queue.h"
 #include "../stackt/stackt.h"
 
 
@@ -79,18 +80,19 @@ void PushUndef(Stack * S){
 }
 
 void PushBangunan (Stack * S, Bangunan B, int index){
-	/* Menambahkan elemen Stack S dengan infostack B(X) = B, Idx(X) = index */
+	/* Menambahkan elemen Stack S dengan infostack B(X) = B, Idx(X) = index, Qu(X) = QEmpty*/
 	/* I.S. S mungkin kosong, tabel penampung elemen stack TIDAK penuh */
 	/* F.S. X menjadi TOP yang baru,TOP bertambah 1 */
 	infostack X;
 	Idx(X) = index;
 	B(X) = B;
+	Qu(X) = QEmpty();
 
 	Push(S, X);
 }
 
 void PopBangunan (Stack * S, Bangunan *B, int *index){
-	/* Menghapus X dari Stack S. X adalah infostack B(X) = B, Idx(X) = index */
+	/* Menghapus X dari Stack S. X adalah infostack B(X) = B, Idx(X) = index, Qu(X) = QEmpty */
 	/* I.S. S  tidak mungkin kosong */
 	/* F.S. X adalah nilai elemen TOP yang lama, TOP berkurang 1 */
 	infostack X;
@@ -98,4 +100,26 @@ void PopBangunan (Stack * S, Bangunan *B, int *index){
 	Pop(S, &X);
 	*B = B(X);
 	*index = Idx(X);
+}
+
+void PushQ (Stack * S, Queue Q){
+	/* Menambahkan elemen Stack S dengan infostack B(X) = BUndef(), Idx(X) = -1, Qu(X) = Q*/
+	/* I.S. S mungkin kosong, tabel penampung elemen stack TIDAK penuh */
+	/* F.S. X menjadi TOP yang baru,TOP bertambah 1 */
+	infostack X;
+	Idx(X) = -1;
+	B(X) = BUndef();
+	Qu(X) = Q;
+
+	Push(S, X);
+}
+
+void PopQ (Stack * S, Queue *Q){
+	/* Menghapus X dari Stack S. X adalah infostack Qu(X) = Q */
+	/* I.S. S  tidak mungkin kosong */
+	/* F.S. X adalah nilai elemen TOP yang lama, TOP berkurang 1 */
+	infostack X;
+
+	Pop(S, &X);
+	*Q = Qu(X);
 }

@@ -87,3 +87,11 @@ void Del (Queue * Q, infotype * X){
 	}
 	
 }
+
+
+Queue QEmpty(){
+	/* Mengirimkan Queue kosong */
+	Queue Q;
+	QCreateEmpty(&Q, 10);
+	return Q;
+}

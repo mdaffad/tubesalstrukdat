@@ -65,4 +65,7 @@ void Del (Queue * Q, infotype * X);
 /* F.S. X = nilai elemen HEAD pd I.S., HEAD "maju" dengan mekanisme circular buffer; 
         Q mungkin kosong */
 
+Queue QEmpty();
+/* Mengirimkan Queue kosong */
+
 #endif

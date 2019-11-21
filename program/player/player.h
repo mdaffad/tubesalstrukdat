@@ -38,7 +38,7 @@ void UpdatePasukan(TabBangunan *T, Player P);
 
 void IdxFromDaftarBangunan(Player P, TabBangunan T, int *idx, char *PesanDaftar, char *PesanInput);
 
-void DoLevelUp(int idx, TabBangunan T, Stack *S);
+void DoLevelUp(int idx, TabBangunan T, Stack *S, Player PCurrent, Player PEnemy);
 
 void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta, Graph G);
 

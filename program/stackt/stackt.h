@@ -12,6 +12,7 @@
 
 #include "../bangunan/bangunan.h"
 #include "../boolean/boolean.h"
+#include "../queue/queue.h"
 #include "../arraydinpos/arraydinpos.h"
 
 #define SNil 0
@@ -22,7 +23,27 @@
 typedef struct {
 	Bangunan B;
 	int index;
+	Queue Q;
 } infostack;
+/* Dalam satu kali AKSI terjadi PUSH:
+	[BANGUNAN 1]
+	[BANGUNAN 2]
+	[BANGUNAN N]
+	[ DELIMIT  ]
+	[QUEUE PEnm]
+	[QUEUE PCur]
+
+	[BANGUNAN 1]
+	[BANGUNAN 2]
+		...
+				*/
+
+/* Dalam satu kali UNDO terjadi POP:
+	Bangunan 1..N kembali ssuai index
+	Queue Penm kembali
+	Queue Pcur kembali */
+
+
 
 typedef int address;   /* indeks tabel */
 
@@ -41,6 +62,7 @@ typedef struct {
 /* Definisi akses dengan Selektor : Set dan Get */
 #define B(X) (X).B
 #define Idx(X) (X).index
+#define Qu(X) (X).Q
 
 #define Top(S) (S).TOP
 #define InfoTop(S) (S).T[(S).TOP]
@@ -85,12 +107,22 @@ void PushUndef(Stack * S);
 /* Aplikasi untuk batasan UNDO */
 
 void PushBangunan (Stack * S, Bangunan B, int index);
-/* Menambahkan elemen Stack S dengan infostack B(X) = B, Idx(X) = index */
+/* Menambahkan elemen Stack S dengan infostack B(X) = B, Idx(X) = index, Qu(X) = QEmpty*/
 /* I.S. S mungkin kosong, tabel penampung elemen stack TIDAK penuh */
 /* F.S. X menjadi TOP yang baru,TOP bertambah 1 */
 
 void PopBangunan (Stack * S, Bangunan *B, int *index);
-/* Menghapus X dari Stack S. X adalah infostack B(X) = B, Idx(X) = index */
+/* Menghapus X dari Stack S. X adalah infostack B(X) = B, Idx(X) = index, Qu(X) = QEmpty */
+/* I.S. S  tidak mungkin kosong */
+/* F.S. X adalah nilai elemen TOP yang lama, TOP berkurang 1 */
+
+void PushQ (Stack * S, Queue Q);
+/* Menambahkan elemen Stack S dengan infostack B(X) = BUndef(), Idx(X) = 0, Qu(X) = Q*/
+/* I.S. S mungkin kosong, tabel penampung elemen stack TIDAK penuh */
+/* F.S. X menjadi TOP yang baru,TOP bertambah 1 */
+
+void PopQ (Stack * S, Queue *Q);
+/* Menghapus X dari Stack S. X adalah infostack Qu(X) = Q */
 /* I.S. S  tidak mungkin kosong */
 /* F.S. X adalah nilai elemen TOP yang lama, TOP berkurang 1 */
 
