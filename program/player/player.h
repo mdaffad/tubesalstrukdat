@@ -24,6 +24,7 @@ typedef struct {
 	Queue Q;
 	int counterShield;
 	boolean isIgnorePertahanan;
+	boolean isCritical;
 } Player;
 
 #define Kode(P) (P).Kode
@@ -31,6 +32,7 @@ typedef struct {
 #define Q(P) (P).Q
 #define cShield(P) (P).counterShield
 #define ignoreP(P) (P).isIgnorePertahanan
+#define isCrit(P) (P).isCritical
 
 void MakePlayer(Player *P, int Kode);
 
