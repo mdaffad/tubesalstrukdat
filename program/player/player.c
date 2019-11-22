@@ -261,22 +261,34 @@ void DoAttack(int idxB1, int idxB2, Player *PCurrent, Player *PEnemy, TabBanguna
 	JmlAkhEnemy = NbElmt(L(*PEnemy));
 
 	// CEK KEPENUHAN QUEUE
-	if(IsAttackSuccess && TowerAwlPlayer == 2 && Tipe(*B2) == 2){
+	if(!IsQFull(Q(*PCurrent))) {
+		if(IsAttackSuccess && TowerAwlPlayer == 2 && Tipe(*B2) == 2){
 		// jika twr awal 2, attack berhasil, type yg diserang = tower
-		Add(&Q(*PCurrent), 4);
-		printf("Kamu mendapat Skill ATTACK UP!\n");
+			Add(&Q(*PCurrent), 4);
+			printf("Kamu mendapat Skill ATTACK UP!\n");
+		}
 	}
-	if(JmlAkhEnemy == 2 && JmlAkhEnemy - JmlAwlEnemy == -1){
-		Add(&Q(*PEnemy), 2);
-		printf("Musuhmu mendapat Skill SHIELD!\n");
+
+	if(!IsQFull(Q(*PEnemy))) {
+		if(JmlAkhEnemy == 2 && JmlAkhEnemy - JmlAwlEnemy == -1){
+			Add(&Q(*PEnemy), 2);
+			printf("Musuhmu mendapat Skill SHIELD!\n");
+		}
 	}
-	if(IsAttackSuccess && IsEnemysFort){
-		Add(&Q(*PEnemy), 3);
-		printf("Musuhmu mendapat Skill EXTRA TURN!\n");
+	
+	
+	if(!IsQFull(Q(*PEnemy))) {
+		if(IsAttackSuccess && IsEnemysFort){
+			Add(&Q(*PEnemy), 3);
+			printf("Musuhmu mendapat Skill EXTRA TURN!\n");
+		}
 	}
-	if(JmlAkhPlayer == 10 && JmlAkhPlayer - JmlAwlPlayer == 1){
-		Add(&Q(*PEnemy), 7);
-		printf("Musuhmu mendapat Skill BARRAGE!\n");
+
+	if(!IsQFull(Q(*PEnemy))) {
+		if(JmlAkhPlayer == 10 && JmlAkhPlayer - JmlAwlPlayer == 1){
+			Add(&Q(*PEnemy), 7);
+			printf("Musuhmu mendapat Skill BARRAGE!\n");
+		}
 	}
 }
 
