@@ -18,9 +18,21 @@ void START(char* path);
    F.S. : CC adalah karakter pertama pada pita
           Jika CC != MARK maka EOP akan padam (false)
           Jika CC = MARK maka EOP akan menyala (true) */
-/* MODE:
-	0: baca config.txt
-	1: -- */
+
+void STARTTULIS(char* path);
+/* Membuka pita karakter pada path */
+
+void TULISKAR(char c);
+/* Menulis c pada pita */
+
+void TULISANGKA(int d);
+/* Menulis d pada pita */
+
+void TULISBLANK();
+/* Menulis spasi pada pita */
+
+void TULISNL();
+/* Menulis newline pada pita */
 
 void ADV();
 /* Pita dimajukan satu karakter.

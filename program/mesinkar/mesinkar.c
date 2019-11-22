@@ -16,13 +16,35 @@ void START(char* path) {
    I.S. : sembarang
    F.S. : CC adalah karakter pertama pada pita. Jika CC != MARK maka EOP akan padam (false).
           Jika CC = MARK maka EOP akan menyala (true) */
-  /* MODE:
-  0: baca config.txt
-  1: -- */
 
     /* Algoritma */
     pita = fopen(path,"r"); 
     ADV();
+}
+
+void STARTTULIS(char* path){
+  /* Membuka pita karakter pada path */
+  pita = fopen(path,"w");
+}
+
+void TULISKAR(char c){
+  /* Menulis c pada pita */
+  fprintf(pita, "%c", c);
+}
+
+void TULISANGKA(int d){
+  /* Menulis d pada pita */
+  fprintf(pita, "%d", d);
+}
+
+void TULISBLANK(){
+  /* Menulis spasi pada pita */
+  fprintf(pita, " ");
+}
+
+void TULISNL(){
+  /* Menulis newline pada pita */
+  fprintf(pita, "\n");
 }
 
 void ADV() {

@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "bangunan.h"
+#include "../bangunan.h"
 
 void menu(){
     printf("*** BANGUNAN TEST PROGRAM ***\n");
