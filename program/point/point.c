@@ -44,8 +44,6 @@ void TulisPOINT (POINT P){
 
 }
 
-
-
 /* *** Kelompok operasi relasional terhadap POINT *** */
 boolean PointEQ (POINT P1, POINT P2){
 	/* Mengirimkan true jika P1 = P2 : absis dan ordinatnya sama */
