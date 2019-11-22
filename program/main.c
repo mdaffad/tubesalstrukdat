@@ -23,9 +23,7 @@ void BacaConfig(TabBangunan *T, MATRIKS *Peta, Player *P1, Player *P2, Graph *G)
 	adrNode Pn;
 	Bangunan tmp;
 
-	// STARTKATA("./bin/config.txt");
-	// STARTKATA("./bin/petakecil.txt");
-	STARTKATA("./bin/petakecilbgt.txt");
+	STARTKATA("./bin/config.txt");
 
 	N = BacaAngka();
 	M = BacaAngka();
@@ -79,18 +77,34 @@ void BacaConfig(TabBangunan *T, MATRIKS *Peta, Player *P1, Player *P2, Graph *G)
 
 }
 
+void title(){
+	printf("\n");
+	printf("            ▄██▄                        ▄▄▄▄▄▄▄\n");
+	printf("           ██████   ██▄     ██    ██▄ ▀██████▀▀▀▀ ▄██   ▐█████▀▀▄▄\n");
+	printf("         ▄███▀▀██▌   ███▄ ▄██▀  ▄██▀██    ███   ▄█████▄ ▐███▄▄▄█▀\n");
+	printf("    ▄▄▄████████████▄▄ █████▀▄██████████▄  ██▌ ▄████▄███ ▐████▄\n");
+	printf("    ████████████████▀  ███   ▐██▀     ██  ██▌ ███▀▀  ███ █▌ ▀███▄▄\n");
+	printf("      ████       ███▌            ▄   ▄    ▀█▌ ▀▀      ▀▀ █     ▀▀███████\n");
+	printf("                  ▀▀  ▄▄       ▐█▌   █     ▀   ▄▄    \n");
+	printf("                ██▄█▌▄██▀██▀██▀██  █▀█   ██▄█▌▄█▀█▀█▌  ██▀\n");
+	printf("                ▐█▀██▀ ▐██ ▐█  ██▀████   ▐█▀██▀ ▐█▀███▐█\n");
+	printf("                                     \n");
+	printf("\n");
+}
+
 void menuAwal(int *choice){
+	title();
+	printf("                      SELAMAT DATANG DI PERMAINAN\n");
+	printf("                          AVATAR: WORLD WAR\n\n");
+	printf("                            1. Start Game\n");
+	printf("                            2. Load Game\n");
+	printf("                            >> ");
 
-	printf("halo selamat datang di permainan avatar hehe\n");
-	printf("1. start game hehe\n");
-	printf("2. load\n");
-	printf(">> ");
-
-	scanf("%d", choice);
+	*choice = InputAngka();
 	while(*choice != 1 && *choice != 2){
-		printf("tidak tersedia hehe\n");
-		printf(">> ");
-		scanf("%d", choice);
+		printf("                        Pilihan tidak tersedia.\n");
+		printf("                            >> ");
+		*choice = InputAngka();
 	}
 	getchar();
 }
@@ -106,19 +120,16 @@ int main(){
 
 	switch(choice){
 		case 1: {
-			printf("start!\n");
+			printf("\n\n\n");
 			BacaConfig(&T, &Peta, &P1, &P2, &G);
 			TakeTurn(&P1, &P2, &T, Peta, G);
 			break;
 		}
 		case 2: {
-			printf("load harusnya tapi belom dibuat T_T\n");
-			// todo
+			printf("Fitur belum tersedia\n");
 			break;
 		}
 	}
-	
-	
 
 	return 0;
 }

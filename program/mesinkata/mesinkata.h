@@ -57,6 +57,9 @@ int BacaAngka();
 char BacaHuruf();
 /* Membaca karakter selanjutnya */
 
+int InputAngka();
+/* Membaca Input sebuah angka */
+
 void BacaInput();
 /* Membaca input */
 

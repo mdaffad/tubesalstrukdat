@@ -74,11 +74,11 @@ void IdxFromDaftarBangunan(Player P, TabBangunan T, int *idx, char *PesanDaftar,
 		printf("%s:\n", PesanDaftar);
 		PrintListBangunan(L(P), T);
 		printf("%s: ", PesanInput);
-		scanf("%d", &choice);
+		choice = InputAngka();
 		while(choice > NbElmt(L(P)) || choice <= 0){
 			printf("Bangunan tidak ada.\n");
 			printf("%s: ", PesanInput);
-			scanf("%d", &choice);
+			choice = InputAngka();
 		}
 
 		*idx = GetAtIdx(L(P), choice);
@@ -120,11 +120,11 @@ void IdxFromAdjacentBangunan(int indeksInput, Player P, TabBangunan T, int *idx,
 		PrintListBangunan(tmp, T);
 
 		printf("%s: ", PesanInput);
-		scanf("%d", &choice);
+		choice = InputAngka();
 		while(choice > NbElmt(tmp) || choice <= 0){
 			printf("Bangunan tidak ada.\n");
 			printf("%s: ", PesanInput);
-			scanf("%d", &choice);
+			choice = InputAngka();
 		}
 
 		*idx = GetAtIdx(tmp, choice);
@@ -203,25 +203,37 @@ void DoAttack(int idxB1, int idxB2, Player *PCurrent, Player *PEnemy, TabBanguna
 	if(Tipe(*B2) == 3 && Pemilik(*B2) != 0) IsEnemysFort = true; /* Diasumsikan hanya perlu di cek apakah forT sudah dimiliki karena diasumsikan tidak akan serang bangunan sendiri */
 
 	printf("Jumlah pasukan: ");
-	scanf("%d", &N);
+	N = InputAngka();
 	while(N > Pasukan(*B1) || N < 0){
-		printf("GA VALID WOY!.\n");
+		printf("Jumlah pasukan tidak valid.\n");
 		printf("Jumlah pasukan: ");
-		scanf("%d", &N);
+		N = InputAngka();
 	}
 
+	printf("\n");
+
+	Pasukan(*B1) = Pasukan(*B1) - N;
 	hasAttacked(*B1) = true;
 
 	if(isCrit(*PCurrent)){
 		// KASUS PENYERANGAN DENGAN CRITICAL
-		printf("CRITT\n");
-		Pasukan(*B1) = Pasukan(*B1) - N; //MASIH SALAH
-		;
+		if(N*2 < Pasukan(*B2)){
+			Pasukan(*B2) = Pasukan(*B2) - N*2;
+			printf("Bangunan gagal direbut.\n");
+		}
+		else{
+			Pasukan(*B2) = (N*2 - Pasukan(*B2))/2;
+			// TRANSFER PEMILIK
+			UpdateToLevel(B2, 1);
+			TransferPemilik(idxB2, PCurrent, PEnemy, T);
+			printf("Bangunan menjadi milikmu!\n");
+			IsAttackSuccess = true;
+		}
+
 		isCrit(*PCurrent) = false;
 		// karena berlaku hanya 1x serangan
 	}
 	else{
-		Pasukan(*B1) = Pasukan(*B1) - N;
 		// KASUS TIDAK ADA PERTAHANAN DAN SHIELD ATAU ADA IGNOREP
 		if((P(*B2) == false && cShield(*PEnemy) == 0) || ignoreP(*PCurrent)){
 			if(N < Pasukan(*B2)){
@@ -260,31 +272,32 @@ void DoAttack(int idxB1, int idxB2, Player *PCurrent, Player *PEnemy, TabBanguna
 	JmlAkhPlayer = NbElmt(L(*PCurrent));
 	JmlAkhEnemy = NbElmt(L(*PEnemy));
 
-	// CEK KEPENUHAN QUEUE
 	if(IsAttackSuccess && TowerAwlPlayer == 2 && Tipe(*B2) == 2){
 		// jika twr awal 2, attack berhasil, type yg diserang = tower
 		if(!IsQFull(Q(*PCurrent))) {
 			Add(&Q(*PCurrent), 4);
 			printf("Kamu mendapat Skill ATTACK UP!\n");
-		} else printf("queue penuh anjir");
+		} else printf("Queue-mu sudah penuh!");
 	}
 	if(JmlAkhEnemy == 2 && JmlAkhEnemy - JmlAwlEnemy == -1){
 		if(!IsQFull(Q(*PEnemy))) {
 			Add(&Q(*PEnemy), 2);
 			printf("Musuhmu mendapat Skill SHIELD!\n");	
-		} else printf("queue penuh anjir");
+		} else printf("Queue musuhmu sudah penuh!");
 		
 	}
 	if(IsAttackSuccess && IsEnemysFort){
 		if(!IsQFull(Q(*PEnemy))) {
 			Add(&Q(*PEnemy), 3);
 			printf("Musuhmu mendapat Skill EXTRA TURN!\n");
-		}
+		} else printf("Queue musuhmu sudah penuh!");
 	}
 	if(JmlAkhPlayer == 10 && JmlAkhPlayer - JmlAwlPlayer == 1){
-		Add(&Q(*PEnemy), 7);
-		printf("Musuhmu mendapat Skill BARRAGE!\n");
-	} else printf("queue penuh anjir");
+		if(!IsQFull(Q(*PEnemy))) {
+			Add(&Q(*PEnemy), 7);
+			printf("Musuhmu mendapat Skill BARRAGE!\n");
+		} else printf("Queue musuhmu sudah penuh!");
+	}
 }
 
 void DoMove(int idxB1, int idxB2, TabBangunan T, Stack *S, Player PCurrent, Player PEnemy){
@@ -301,11 +314,11 @@ void DoMove(int idxB1, int idxB2, TabBangunan T, Stack *S, Player PCurrent, Play
 	PushBangunan(S, *B2, idxB2);
 
 	printf("Jumlah pasukan: ");
-	scanf("%d", &N);
+	N = InputAngka();
 	while(N > Pasukan(*B1) || N < 0){
-		printf("GA VALID WOY!.\n");
+		printf("Jumlah pasukan tidak valid.\n");
 		printf("Jumlah pasukan: ");
-		scanf("%d", &N);
+		N = InputAngka();
 	}
 
 	Pasukan(*B1) = Pasukan(*B1) - N;
@@ -338,31 +351,31 @@ void DoSkill(Player *PCurrent, Player *PEnemy, TabBangunan *T, boolean *ExtraTur
 					UpdateToLevel(tmpB, Lvl(*tmpB)+1);
 				}
 			}
-			printf("Level bangunanmu telah meningkat!\n");
+			printf("Level bangunanmu telah meningkat!\n\n");
 			break;
 		} case 2: {
 			// SHIELD
 			printf("Shield!!\n");
 			cShield(*PCurrent) = 2;
-			printf("Bangunanmu akan memiliki pertahanan selama 2 giliran!!\n");
+			printf("Bangunanmu akan memiliki pertahanan selama 2 giliran!!\n\n");
 			break;
 		} case 3: {
 			// EXTRA TURN
 			printf("EXTRA TURN!!\n");
 			*ExtraTurn = true;
-			printf("Kamu mendapat tambahan satu giliran!\n");
+			printf("Kamu mendapat tambahan satu giliran!!\n\n");
 			break;
 		} case 4: {
 			// ATTACK UP
 			printf("ATTACK UP!!\n");
 			ignoreP(*PCurrent) = true;
-			printf("Pertahanan musuh giliran ini tidak akan berpengaruh!\n");
+			printf("Pertahanan musuh giliran ini tidak akan berpengaruh!!\n\n");
 			break;
 		} case 5: {
 			// CRITICAL HIT
 			printf("CRITICAL HIT!\n");
 			isCrit(*PCurrent) = true;
-			printf("Jumlah pasukan yang menyerang giliran ini hanya akan berkurang setengah, pertahanan musuh tidak berpengaruh!\n");
+			printf("Jumlah pasukan yang menyerang giliran ini efektif 2x dan pertahanan musuh tidak berpengaruh!!\n\n");
 			break;
 		} case 6: {
 			// INSTANT REINFORCEMENT
@@ -374,11 +387,11 @@ void DoSkill(Player *PCurrent, Player *PEnemy, TabBangunan *T, boolean *ExtraTur
 					Pasukan(*tmpB) += 5;
 				}
 			}
+			printf("Seluruh bangunanmu mendapatkan tambahan 5 pasukan!!\n\n");
 			break;
 		} case 7: {
 			// BARRAGE
 			printf("Barrage!!\n");
-
 			for(i=GetFirstIdx(*T);i<=(GetLastIdx(*T));i++){
 				tmpB = &TabElmt(*T, i);
 
@@ -391,7 +404,7 @@ void DoSkill(Player *PCurrent, Player *PEnemy, TabBangunan *T, boolean *ExtraTur
 					}
 				}
 			}
-			printf("Jumlah pasukan di semua bangunan musuh berkurang 10!\n");
+			printf("Jumlah pasukan di semua bangunan musuh berkurang 10!!\n\n");
 			break;
 		}
 	}
@@ -444,6 +457,7 @@ void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta, Gr
 
 	printf("\n");
 	PrintPeta(Peta, *T);
+	printf("\n");
 	printf("Player %d\n", Kode(*PCurrent));
 	PrintListBangunan(L(*PCurrent), *T);
 	printf("Skill Available: "); 
@@ -460,9 +474,11 @@ void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta, Gr
 	while(!IsKataEND_TURN(CKata) && !IsKataEXIT(CKata) && is_cont){
 
 		if(IsKataATTACK(CKata)){
+			printf("\n");
 			IdxFromDaftarBangunan(*PCurrent, *T, &idx, "Daftar Bangunan", "Bangunan yang digunakan untuk menyerang");
 			if(!hasAttacked(TabElmt(*T, idx))){
 				if(idx != -1){
+					printf("\n");
 					IdxFromAdjacentBangunan(idx, *PCurrent, *T, &idx2, "Daftar bangunan yang dapat diserang", "Bangunan yang diserang", false, G);
 				}
 				if(idx != -1 && idx2 != -1){
@@ -503,12 +519,11 @@ void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta, Gr
 				mayUndo = false;
 				DoSkill(PCurrent, PEnemy, T, &ExtraTurn);
 
-				// CEK KEPENUHAN QUEUE
 				if(ExtraTurn){
 					if(!IsQFull(Q(*PEnemy))) {
 						Add(&Q(*PEnemy), 5); // CRITICAL HIT ACTIVATED
-					printf("Musuhmu mendapat Skill CRITICAL HIT!\n");
-					} else printf("queuenya kepenuhan jir :(");
+						printf("Musuhmu mendapat Skill CRITICAL HIT!\n");
+					} else printf("Queue musuhmu sudah penuh!");
 				}
 			}
 		}
@@ -516,7 +531,7 @@ void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta, Gr
 			// Spesifikasi UNDO ada pada stackt.h
 			if(mayUndo){
 				if(IsSEmpty(S)){
-					printf("Mau nge-UNDO paan si :(\n");
+					printf("UNDO tidak dapat dilakukan!\n");
 				}
 				else{
 					do {
@@ -543,11 +558,12 @@ void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta, Gr
 
 		}
 		else if(IsKataSAVE(CKata)){
-			printf("save not implemented yet\n");
+			printf("Fitur belum tersedia.\n");
 		}
 		else if(IsKataSTATUS(CKata)){
 			printf("\n");
 			PrintPeta(Peta, *T);
+			printf("\n");
 			printf("Player %d\n", Kode(*PCurrent));
 			PrintListBangunan(L(*PCurrent), *T);
 			printf("Skill Available: "); 
@@ -559,22 +575,22 @@ void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta, Gr
 			}
 		}
 		else{
-			printf("INPUT YG BENER LAH\n");
+			printf("Input Anda tidak valid.\n");
 		}
 
 		if(is_cont){
+			printf("\n");
 			printf("ENTER COMMAND: ");
 			BacaInput();
 		}
 	}
 
 	if(IsKataEND_TURN(CKata)){
-		// CEK KEPENUHAN QUEUE
 		if(IsSkill6(*PCurrent, *T)){
 			if(!IsQFull(Q(*PCurrent))) {
 				Add(&Q(*PCurrent), 6);
 				printf("Kamu mendapat Skill INSTANT REINFORCEMENT!\n");	
-			} else printf("kepenuhan laah");
+			} else printf("Queue-mu sudah penuh!");
 		}
 		if(ExtraTurn){
 			TakeTurn(PCurrent, PEnemy, T, Peta, G);

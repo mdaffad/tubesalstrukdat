@@ -99,17 +99,30 @@ char BacaHuruf(){
 	return c;
 }
 
+int InputAngka(){
+	/* Membaca Input sebuah angka */
+
+	printf("\x1b[1m");
+	printf("\x1b[4m");
+	int N;
+	scanf("%d", &N);
+	printf("\x1b[0m");
+	return N;
+}
+
 void BacaInput(){
 	/* Membaca input */
 	int i=1;
-	/* Membaca input */
 
+	printf("\x1b[1m");
+	printf("\x1b[4m");
 	do {
 		ADVInput();
 		CKata.TabKata[i] = CC;
 		i++;
 	} while((CC != EOI) && (i <= NMax));
 	CKata.Length = i-2;
+	printf("\x1b[0m");
 }
 
 boolean IsKataSama(Kata K1, Kata K2){

@@ -55,7 +55,7 @@
 		Nama: Critical Hit (BONUS)
 		Desc: Pada giliran ini, setelah skill diaktifkan, jumlah pasukan pada bangunan yang
 			melakukan serangan tepat selanjutnya (hanya berlaku 1 serangan) hanya
-			berkurang ½ dari jumlah seharusnya efektif sebanyak 2 kali lipat pasukan . Skill ini
+			efektif sebanyak 2 kali lipat pasukan . Skill ini
 			akan menonaktifkan Shield maupun pertahanan bangunan, seperti Attack Up.
 		Kond: Pemain mendapat skill ini jika lawan baru saja mengaktifkan skill Extra Turn.
 	Skill 6:

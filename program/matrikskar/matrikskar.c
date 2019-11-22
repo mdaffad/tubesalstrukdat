@@ -74,10 +74,16 @@ void PrintPeta(MATRIKS Peta, TabBangunan T){
 	/* F.S. Peta karakter tercetak */
 	int i,j;
 
+
 	for(i=0; i<=NBrsEff(Peta)+1; i++){
 		for(j=0; j<=NKolEff(Peta)+1; j++){
 			if(i==0 || j==0 || i==(NBrsEff(Peta)+1) || j==(NKolEff(Peta)+1)){
+				if(j==0){
+					printf("  ");
+				}
+				printf("\x1b[1m");
 				printf("*");
+				printf("\x1b[0m");
 			}
 			else{
 				if(MatElmt(Peta, i, j) == ' '){
@@ -90,4 +96,5 @@ void PrintPeta(MATRIKS Peta, TabBangunan T){
 		}	
 		printf("\n");
 	}
+
 }	
