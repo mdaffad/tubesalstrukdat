@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include "arraydinpos.h"
-#include "boolean.h"
+#include "../arraydinpos.h"
+#include "../../boolean.h"
 
 void menu() {
     printf("*** ARRAYDINPOS TEST PROGRAM ***\n");

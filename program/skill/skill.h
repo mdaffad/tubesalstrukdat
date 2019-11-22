@@ -49,6 +49,8 @@
 			Shield) tidak akan mempengaruhi penyerangan.
 		Kond: Pemain mendapat skill ini jika pemain baru saja menyerang Tower lawan dan
 			jumlah towernya menjadi 3.
+			Diasumsikan maksud di sini adalah jika pemain meyerang bangunan yg adalah tower (milik siapapun 0, 1, 2) 
+			dan tower pemain tersebut BERTAMBAH menjadi 3
 	Skill 5:
 		Nama: Critical Hit (BONUS)
 		Desc: Pada giliran ini, setelah skill diaktifkan, jumlah pasukan pada bangunan yang

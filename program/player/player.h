@@ -22,11 +22,15 @@ typedef struct {
 	int Kode;
 	List L;
 	Queue Q;
+	int counterShield;
+	boolean isIgnorePertahanan;
 } Player;
 
 #define Kode(P) (P).Kode
 #define L(P) (P).L
 #define Q(P) (P).Q
+#define cShield(P) (P).counterShield
+#define ignoreP(P) (P).isIgnorePertahanan
 
 void MakePlayer(Player *P, int Kode);
 
