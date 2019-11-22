@@ -8,7 +8,7 @@ int main(){
 	Queue Q;
 
 	QCreateEmpty(&Q,2);
-	printf("isEmpty? : %d\n", IsLEmpty(Q));
+	printf("isEmpty? : %d\n", IsQEmpty(Q));
 
 	printf("Add 1, ");
 	Add(&Q, 1);
@@ -23,6 +23,5 @@ int main(){
     printf("Del? : %d\n", X);
     Del (&Q, &X);
     printf("Del? : %d\n", X);
-
-
+    return 0;
 }
