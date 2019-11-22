@@ -23,9 +23,9 @@ void BacaConfig(TabBangunan *T, MATRIKS *Peta, Player *P1, Player *P2, Graph *G)
 	adrNode Pn;
 	Bangunan tmp;
 
-	// STARTKATA("./bin/config.txt");
+	STARTKATA("./bin/config.txt");
 	// STARTKATA("./bin/petakecil.txt");
-	STARTKATA("./bin/petakecilbgt.txt");
+	// STARTKATA("./bin/petakecilbgt.txt");
 
 	N = BacaAngka();
 	M = BacaAngka();

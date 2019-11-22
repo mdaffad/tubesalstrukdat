@@ -2,8 +2,6 @@
 #include "../mesinkata.h"
 #include "../../boolean/boolean.h"
 
-/* Driver ini juga merupakan driver untuk mesinkar */
-
 int main() {
     char c;
     int K;
