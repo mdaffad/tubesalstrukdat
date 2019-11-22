@@ -210,40 +210,52 @@ void DoAttack(int idxB1, int idxB2, Player *PCurrent, Player *PEnemy, TabBanguna
 		scanf("%d", &N);
 	}
 
-	Pasukan(*B1) = Pasukan(*B1) - N;
 	hasAttacked(*B1) = true;
-	// KASUS TIDAK ADA PERTAHANAN DAN SHIELD ATAU ADA IGNOREP
-	if((P(*B2) == false && cShield(*PEnemy) == 0) || ignoreP(*PCurrent)){
-		if(N < Pasukan(*B2)){
-			Pasukan(*B2) = Pasukan(*B2) - N;
-			printf("Bangunan gagal direbut.\n");
-		}
-		else{
-			// N >= Pasukan(*B2)
-			Pasukan(*B2) = N - Pasukan(*B2);
-			// TRANSFER PEMILIK
-			UpdateToLevel(B2, 1);
-			TransferPemilik(idxB2, PCurrent, PEnemy, T);
-			printf("Bangunan menjadi milikmu!\n");
-			IsAttackSuccess = true;
-		}
+
+	if(isCrit(*PCurrent)){
+		// KASUS PENYERANGAN DENGAN CRITICAL
+		printf("CRITT\n");
+		Pasukan(*B1) = Pasukan(*B1) - N; //MASIH SALAH
+		;
+		isCrit(*PCurrent) = false;
+		// karena berlaku hanya 1x serangan
 	}
-	// KASUS DGN PERTAHANAN ATAU SHIELD, TIDAK ADA IGNOREP
 	else{
-		if(N < Pasukan(*B2)*4/3){
-			Pasukan(*B2) = Pasukan(*B2) - N*3/4;
-			printf("Bangunan gagal direbut.\n");
+		Pasukan(*B1) = Pasukan(*B1) - N;
+		// KASUS TIDAK ADA PERTAHANAN DAN SHIELD ATAU ADA IGNOREP
+		if((P(*B2) == false && cShield(*PEnemy) == 0) || ignoreP(*PCurrent)){
+			if(N < Pasukan(*B2)){
+				Pasukan(*B2) = Pasukan(*B2) - N;
+				printf("Bangunan gagal direbut.\n");
+			}
+			else{
+				// N >= Pasukan(*B2)
+				Pasukan(*B2) = N - Pasukan(*B2);
+				// TRANSFER PEMILIK
+				UpdateToLevel(B2, 1);
+				TransferPemilik(idxB2, PCurrent, PEnemy, T);
+				printf("Bangunan menjadi milikmu!\n");
+				IsAttackSuccess = true;
+			}
 		}
+		// KASUS DGN PERTAHANAN ATAU SHIELD, TIDAK ADA IGNOREP
 		else{
-			// N >= Pasukan(*B2)*4/3
-			Pasukan(*B2) = N - Pasukan(*B2)*4/3;
-			// TRANSFER PEMILIK
-			UpdateToLevel(B2, 1);
-			TransferPemilik(idxB2, PCurrent, PEnemy, T);
-			printf("Bangunan menjadi milikmu!\n"); 
-			IsAttackSuccess = true;
+			if(N < Pasukan(*B2)*4/3){
+				Pasukan(*B2) = Pasukan(*B2) - N*3/4;
+				printf("Bangunan gagal direbut.\n");
+			}
+			else{
+				// N >= Pasukan(*B2)*4/3
+				Pasukan(*B2) = N - Pasukan(*B2)*4/3;
+				// TRANSFER PEMILIK
+				UpdateToLevel(B2, 1);
+				TransferPemilik(idxB2, PCurrent, PEnemy, T);
+				printf("Bangunan menjadi milikmu!\n"); 
+				IsAttackSuccess = true;
+			}
 		}
 	}
+	
 
 	JmlAkhPlayer = NbElmt(L(*PCurrent));
 	JmlAkhEnemy = NbElmt(L(*PEnemy));
@@ -341,7 +353,9 @@ void DoSkill(Player *PCurrent, Player *PEnemy, TabBangunan *T, boolean *ExtraTur
 			break;
 		} case 5: {
 			// CRITICAL HIT
-			
+			printf("CRITICAL HIT!\n");
+			isCrit(*PCurrent) = true;
+			printf("Jumlah pasukan yang menyerang giliran ini hanya akan berkurang setengah, pertahanan musuh tidak berpengaruh!\n");
 			break;
 		} case 6: {
 			// INSTANT REINFORCEMENT
@@ -410,6 +424,7 @@ void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta, Gr
 	mayUndo = true;
 	ExtraTurn = false;
 	ignoreP(*PCurrent) = false;
+	isCrit(*PCurrent) = false;
 
 	SCreateEmpty(&S);
 	UpdatePasukan(T, *PCurrent);
