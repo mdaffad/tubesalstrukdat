@@ -457,7 +457,6 @@ void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta, Gr
 
 	if(!Load){
 		// Jika dari load tidak ada inisiasi turn ini
-		mayUndo = true;
 		xTurn(*PCurrent) = false;
 		ignoreP(*PCurrent) = false;
 		isCrit(*PCurrent) = false;
@@ -471,6 +470,7 @@ void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta, Gr
 	
 	SCreateEmpty(&S);
 	is_cont = true;
+	mayUndo = true;
 
 	printf("\n");
 	PrintPeta(Peta, *T);
