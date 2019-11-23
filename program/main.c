@@ -69,7 +69,7 @@ void LoadFile(TabBangunan *T, MATRIKS *Peta, Player *P1, Player *P2, Graph *G, i
 
 	MakeEmpty(T, 40);
 
-	// Baca dari load file, untuk saat ini diasumsikan load file selalu valis
+	// Baca dari load file, untuk saat ini diasumsikan load file selalu valid
 	printf("Lokasi load file: ");
 	BacaInput();
 	CKata.TabKata[CKata.Length+1] = 0;
@@ -118,7 +118,7 @@ void BacaConfig(TabBangunan *T, MATRIKS *Peta, Player *P1, Player *P2, Graph *G)
 	adrNode Pn;
 	Bangunan tmp;
 
-	STARTKATA("./bin/petakecilbgt.txt");
+	STARTKATA("./bin/config.txt");
 
 	N = BacaAngka();
 	M = BacaAngka();
