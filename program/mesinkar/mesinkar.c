@@ -8,6 +8,7 @@ char CC;
 boolean EOP;
 
 static FILE * pita;
+static FILE * pitaout;
 static int retval;
 
 void START(char* path) {
@@ -23,28 +24,33 @@ void START(char* path) {
 }
 
 void STARTTULIS(char* path){
-  /* Membuka pita karakter pada path */
-  pita = fopen(path,"w");
+  /* Membuka pitaout karakter pada path */
+  pitaout = fopen(path,"w+");
 }
 
 void TULISKAR(char c){
-  /* Menulis c pada pita */
-  fprintf(pita, "%c", c);
+  /* Menulis c pada pitaout */
+  fprintf(pitaout, "%c", c);
 }
 
 void TULISANGKA(int d){
-  /* Menulis d pada pita */
-  fprintf(pita, "%d", d);
+  /* Menulis d pada pitaout */
+  fprintf(pitaout, "%d", d);
 }
 
 void TULISBLANK(){
-  /* Menulis spasi pada pita */
-  fprintf(pita, " ");
+  /* Menulis spasi pada pitaout */
+  fprintf(pitaout, " ");
+}
+
+void DONETULIS(){
+  /* Selesai menulis pitaout */
+  fclose(pitaout);
 }
 
 void TULISNL(){
   /* Menulis newline pada pita */
-  fprintf(pita, "\n");
+  fprintf(pitaout, "\n");
 }
 
 void ADV() {

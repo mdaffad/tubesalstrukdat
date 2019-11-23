@@ -20,6 +20,7 @@ int main() {
     TULISBLANK();
     TULISANGKA(2);
     TULISNL();
+    DONETULIS();
 
     return 0;
 }

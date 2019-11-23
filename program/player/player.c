@@ -11,6 +11,7 @@
 #include "../bangunan/bangunan.h"
 #include "../matrikskar/matrikskar.h"
 #include "../mesinkata/mesinkata.h"
+#include "../mesinkar/mesinkar.h"
 #include "../graf/graf.h"
 #include "../pcolor/pcolor.h"
 #include "../player/player.h"
@@ -25,6 +26,7 @@ void MakePlayer(Player *P, int N){
 	Add(&Q(*P), 1); //INSTANT UPGRADE
 	cShield(*P) = 0;
 	ignoreP(*P) = false;
+	xTurn(*P) = false;
 }
 
 void AddIdxBangunan(Player *P, int Idx){
@@ -340,7 +342,7 @@ void DoMove(int idxB1, int idxB2, TabBangunan T, Stack *S, Player PCurrent, Play
 	PrintNama(*B2); printf(" "); TulisPOINT(Pos(*B2)); printf(".\n");
 }
 
-void DoSkill(Player *PCurrent, Player *PEnemy, TabBangunan *T, boolean *ExtraTurn){
+void DoSkill(Player *PCurrent, Player *PEnemy, TabBangunan *T){
 	/* Menggunakan skill terdepan pada Queue milik PCurrent */
 
 	int Skill;
@@ -373,7 +375,7 @@ void DoSkill(Player *PCurrent, Player *PEnemy, TabBangunan *T, boolean *ExtraTur
 		} case 3: {
 			// EXTRA TURN
 			printf("EXTRA TURN!!\n");
-			*ExtraTurn = true;
+			xTurn(*PCurrent) = true;
 			printf("Kamu mendapat tambahan satu giliran!!\n\n");
 			break;
 		} case 4: {
@@ -443,31 +445,32 @@ boolean isGameOver(Player PEnemy){
 	return (NbElmt(L(PEnemy)) == 0);
 }
 
-void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta, Graph G){
+void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta, Graph G, boolean Load){
 	/* Melakukan satu giliran PCurrent */
 	int idx;
 	int idx2;
 	int i;
-	boolean ExtraTurn;
 	boolean mayUndo;
 	boolean is_cont;
 	Stack S;
 	Bangunan tmpB;
 
-	is_cont = true;
-	mayUndo = true;
-	ExtraTurn = false;
-	ignoreP(*PCurrent) = false;
-	isCrit(*PCurrent) = false;
-
-	SCreateEmpty(&S);
-	UpdatePasukan(T, *PCurrent);
-	ResetAttackMove(T);
-
-	// counter shield berkurang per giliran
-	if(cShield(*PCurrent) > 0){
-		cShield(*PCurrent) -= 1;
+	if(!Load){
+		// Jika dari load tidak ada inisiasi turn ini
+		mayUndo = true;
+		xTurn(*PCurrent) = false;
+		ignoreP(*PCurrent) = false;
+		isCrit(*PCurrent) = false;
+		UpdatePasukan(T, *PCurrent);
+		ResetAttackMove(T);
+		// counter shield berkurang per giliran
+		if(cShield(*PCurrent) > 0){
+			cShield(*PCurrent) -= 1;
+		}
 	}
+	
+	SCreateEmpty(&S);
+	is_cont = true;
 
 	printf("\n");
 	PrintPeta(Peta, *T);
@@ -531,9 +534,9 @@ void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta, Gr
 			}
 			else{
 				mayUndo = false;
-				DoSkill(PCurrent, PEnemy, T, &ExtraTurn);
+				DoSkill(PCurrent, PEnemy, T);
 
-				if(ExtraTurn){
+				if(xTurn(*PCurrent)){
 					if(!IsQFull(Q(*PEnemy))) {
 						Add(&Q(*PEnemy), 5); // CRITICAL HIT ACTIVATED
 						printf("Musuhmu mendapat Skill CRITICAL HIT!\n");
@@ -572,7 +575,14 @@ void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta, Gr
 
 		}
 		else if(IsKataSAVE(CKata)){
-			printf("Fitur belum tersedia.\n");
+			// printf("Fitur belum tersedia.\n");
+			if(Kode(*PCurrent)==1){
+				SaveFile(*PCurrent, *PEnemy, *T, Peta, G, 1);
+			}
+			else{
+				SaveFile(*PEnemy, *PCurrent, *T, Peta, G, 2);
+			}
+			
 		}
 		else if(IsKataSTATUS(CKata)){
 			printf("\n");
@@ -606,11 +616,11 @@ void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta, Gr
 				printf("Kamu mendapat Skill INSTANT REINFORCEMENT!\n");	
 			} else printf("Queue-mu sudah penuh!");
 		}
-		if(ExtraTurn){
-			TakeTurn(PCurrent, PEnemy, T, Peta, G);
+		if(xTurn(*PCurrent)){
+			TakeTurn(PCurrent, PEnemy, T, Peta, G, false);
 		}
 		else{
-			TakeTurn(PEnemy, PCurrent, T, Peta, G);
+			TakeTurn(PEnemy, PCurrent, T, Peta, G, false);
 		}
 		
 	}
@@ -629,4 +639,94 @@ void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta, Gr
 		printf("\x1b[0m");
 		printf("\n\n");
 	}
+}
+
+void SavePlayer(Player Pl){
+	/* Menulis info Player ke pitaout */
+	/* Pitaout sudah dibuka dan belum ditutup */
+	addressL P;
+	int tmp;
+
+	// List
+	P = First(L(Pl));
+
+	while(P != LNil){
+		TULISANGKA(Info(P)); TULISBLANK();
+		P = Next(P);
+	}
+	TULISANGKA(99); //DELIMITER
+	TULISNL();
+
+	// Q
+	while(!IsQEmpty(Q(Pl))){
+		Del(&Q(Pl), &tmp);
+		TULISANGKA(tmp); TULISBLANK();
+	}
+	TULISANGKA(99); //DELIMITER
+	TULISNL();
+
+	// cShield, ignoreP, isCrit
+	TULISANGKA(cShield(Pl)); TULISBLANK();
+	TULISANGKA(ignoreP(Pl)); TULISBLANK();
+	TULISANGKA(isCrit(Pl)); TULISBLANK();
+	TULISANGKA(xTurn(Pl)); TULISBLANK();
+	TULISNL();
+}
+
+void SaveBangunan(Bangunan B){
+	/* Menulis info Bangunan ke pitaout */
+	TULISANGKA(Tipe(B)); TULISBLANK();
+	TULISANGKA(Pemilik(B)); TULISBLANK();
+	TULISANGKA(Pasukan(B)); TULISBLANK();
+	TULISANGKA(Lvl(B)); TULISBLANK();
+	TULISANGKA(A(B)); TULISBLANK();
+	TULISANGKA(M(B)); TULISBLANK();
+	TULISANGKA(P(B)); TULISBLANK();
+	TULISANGKA(Absis(Pos(B))); TULISBLANK();
+	TULISANGKA(Ordinat(Pos(B))); TULISBLANK();
+	TULISANGKA(hasAttacked(B)); TULISBLANK();
+	TULISANGKA(hasMoved(B)); TULISBLANK();
+	TULISNL();
+}
+
+void SaveFile(Player P1, Player P2, TabBangunan T, MATRIKS Peta, Graph G, int Turn){
+	/* Membuat save file */
+	addressL P;
+	int tmp, i, j;
+
+	// Path save
+	printf("Lokasi save file: ");
+	BacaInput();
+	CKata.TabKata[CKata.Length+1] = 0;
+
+	// Mulai menulis
+	STARTTULIS(&CKata.TabKata[1]);
+
+	// Player
+	SavePlayer(P1);
+	SavePlayer(P2);
+
+	// Tab
+	TULISANGKA(TabNbElmt(T)); TULISNL();
+	for(i=GetFirstIdx(T);i<=(GetLastIdx(T));i++){
+		SaveBangunan(TabElmt(T, i));
+	}
+
+	// Peta dan Graf
+	TULISANGKA(NBrsEff(Peta)); TULISBLANK();
+	TULISANGKA(NKolEff(Peta)); TULISBLANK();
+	TULISNL();
+
+	for(i=GetFirstIdx(T);i<=(GetLastIdx(T));i++){
+		for(j=GetFirstIdx(T);j<=(GetLastIdx(T));j++){
+			TULISANGKA(isConnected(G, i, j)); TULISBLANK();
+		}
+		TULISNL();
+	}
+
+	// Giliran
+	TULISANGKA(Turn); TULISKAR('.');
+
+
+    DONETULIS();
 }

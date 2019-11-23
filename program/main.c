@@ -15,6 +15,101 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+
+void LoadPlayer(Player *Pl, int Kode){
+	int x;
+
+	LCreateEmpty(&L(*Pl));
+	QCreateEmpty(&Q(*Pl), 10);
+
+	//Player
+	Kode(*Pl) = Kode;
+	//List
+	x = BacaAngka();
+	while(x != 99){
+		InsVLast(&L(*Pl), x);
+		x = BacaAngka();
+	}
+
+	x = BacaAngka();
+	//Q
+	while(x != 99){
+		Add(&Q(*Pl), x);
+		x = BacaAngka();
+	}
+
+	x = BacaAngka(); cShield(*Pl) = x;
+	x = BacaAngka(); ignoreP(*Pl) = x;
+	x = BacaAngka(); isCrit(*Pl) = x;
+	x = BacaAngka(); xTurn(*Pl) = x;
+}
+
+void LoadBangunan(Bangunan *B){
+	int x;
+
+	x = BacaAngka(); Tipe(*B) = x;
+	x = BacaAngka(); Pemilik(*B) = x;
+	x = BacaAngka(); Pasukan(*B) = x;
+	x = BacaAngka(); Lvl(*B) = x;
+	x = BacaAngka(); A(*B) = x;
+	x = BacaAngka(); M(*B) = x;
+	x = BacaAngka(); P(*B) = x;
+	x = BacaAngka(); Absis(Pos(*B)) = x;
+	x = BacaAngka(); Ordinat(Pos(*B)) = x;
+	x = BacaAngka(); hasAttacked(*B) = x;
+	x = BacaAngka(); hasMoved(*B) = x;
+}
+
+void LoadFile(TabBangunan *T, MATRIKS *Peta, Player *P1, Player *P2, Graph *G, int *Turn){
+	int N, M, B;
+	int x;
+	int i, j;
+	char c;
+	adrNode Pn;
+
+	MakeEmpty(T, 40);
+
+	// Baca dari load file, untuk saat ini diasumsikan load file selalu valis
+	printf("Lokasi load file: ");
+	BacaInput();
+	CKata.TabKata[CKata.Length+1] = 0;
+	STARTKATA(&CKata.TabKata[1]);
+
+	LoadPlayer(P1, 1);
+	LoadPlayer(P2, 2);
+
+	B = BacaAngka();
+	for(i=1; i<=B; i++){
+		LoadBangunan(&TabElmt(*T, i));
+	}
+
+	N = BacaAngka();
+	M = BacaAngka();
+	MakeMATRIKS(N, M, Peta);
+
+	CreateGraph(0, G);
+
+	// Inisialisasi Node 1 - B
+	for(i=1; i<=B; i++){
+		InsertNode(G, i, &Pn);
+	}
+
+	for(i=1; i<=B; i++){
+		for(j=1; j<=B; j++){
+			x = BacaAngka();
+			if(x==1){
+				Connect(G, i, j);
+			}
+		}
+	}
+
+	x = BacaAngka();
+	*Turn = x;
+
+	FillPeta(Peta, *T);
+
+}
+
 void BacaConfig(TabBangunan *T, MATRIKS *Peta, Player *P1, Player *P2, Graph *G){
 	int N, M, B;
 	int x, y, tipe;
@@ -113,7 +208,7 @@ int main(){
 	MATRIKS Peta;
 	TabBangunan T;
 	Graph G;
-	int choice;
+	int choice, Turn;
 
 	menuAwal(&choice);
 
@@ -121,11 +216,17 @@ int main(){
 		case 1: {
 			printf("\n\n\n");
 			BacaConfig(&T, &Peta, &P1, &P2, &G);
-			TakeTurn(&P1, &P2, &T, Peta, G);
+			TakeTurn(&P1, &P2, &T, Peta, G, false);
 			break;
 		}
 		case 2: {
-			printf("Fitur belum tersedia\n");
+			LoadFile(&T, &Peta, &P1, &P2, &G, &Turn);
+			if(Turn == 1){
+				TakeTurn(&P1, &P2, &T, Peta, G, true);
+			}
+			else{
+				TakeTurn(&P2, &P1, &T, Peta, G, true);
+			}
 			break;
 		}
 	}

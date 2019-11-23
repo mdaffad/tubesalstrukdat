@@ -13,6 +13,7 @@
 #include "../bangunan/bangunan.h"
 #include "../matrikskar/matrikskar.h"
 #include "../mesinkata/mesinkata.h"
+#include "../mesinkar/mesinkar.h"
 #include "../skill/skill.h"
 #include "../graf/graf.h"
 #include "../pcolor/pcolor.h"
@@ -25,6 +26,7 @@ typedef struct {
 	int counterShield;
 	boolean isIgnorePertahanan;
 	boolean isCritical;
+	boolean extraTurn;
 } Player;
 
 #define Kode(P) (P).Kode
@@ -33,6 +35,7 @@ typedef struct {
 #define cShield(P) (P).counterShield
 #define ignoreP(P) (P).isIgnorePertahanan
 #define isCrit(P) (P).isCritical
+#define xTurn(P) (P).extraTurn
 
 void MakePlayer(Player *P, int Kode);
 /* Konstruktor untuk Player */
@@ -71,7 +74,7 @@ void DoAttack(int idxB1, int idxB2, Player *PCurrent, Player *PEnemy, TabBanguna
 void DoMove(int idxB1, int idxB2, TabBangunan T, Stack *S, Player PCurrent, Player PEnemy);
 /* Pasukan pada bangunan ke-idxB1 berpindah ke bangunan ke-idxB2 dalam tabel */
 
-void DoSkill(Player *PCurrent, Player *PEnemy, TabBangunan *T, boolean *ExtraTurn);
+void DoSkill(Player *PCurrent, Player *PEnemy, TabBangunan *T);
 /* Menggunakan skill terdepan pada Queue milik PCurrent */
 
 boolean IsSkill6(Player P, TabBangunan T);
@@ -80,7 +83,16 @@ boolean IsSkill6(Player P, TabBangunan T);
 boolean isGameOver(Player PEnemy);
 /* Mengecek apakah game sudah berakhir dan dimenangkan salah satu pemain */
 
-void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta, Graph G);
+void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta, Graph G, boolean Load);
 /* Melakukan satu giliran PCurrent */
+
+void SavePlayer(Player Pl);
+/* Menulis info Player ke pitaout */
+
+void SaveBangunan(Bangunan B);
+/* Menulis info Bangunan ke pitaout */
+
+void SaveFile(Player P1, Player P2, TabBangunan T, MATRIKS Peta, Graph G, int Turn);
+/* Membuat save file */
 
 #endif

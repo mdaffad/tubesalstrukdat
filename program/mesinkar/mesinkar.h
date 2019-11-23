@@ -20,19 +20,22 @@ void START(char* path);
           Jika CC = MARK maka EOP akan menyala (true) */
 
 void STARTTULIS(char* path);
-/* Membuka pita karakter pada path */
+/* Membuka pitaout karakter pada path */
 
 void TULISKAR(char c);
-/* Menulis c pada pita */
+/* Menulis c pada pitaout */
 
 void TULISANGKA(int d);
-/* Menulis d pada pita */
+/* Menulis d pada pitaout */
 
 void TULISBLANK();
-/* Menulis spasi pada pita */
+/* Menulis spasi pada pitaout */
 
 void TULISNL();
-/* Menulis newline pada pita */
+/* Menulis newline pada pitaout */
+
+void DONETULIS();
+/* Selesai menulis pitaout */
 
 void ADV();
 /* Pita dimajukan satu karakter.
