@@ -18,6 +18,7 @@
 #include <stdio.h>
 
 void MakePlayer(Player *P, int N){
+	/* Konstruktor untuk Player */
 	Kode(*P) = N;
 	LCreateEmpty(&L(*P));
 	QCreateEmpty(&Q(*P), 10);
@@ -27,14 +28,17 @@ void MakePlayer(Player *P, int N){
 }
 
 void AddIdxBangunan(Player *P, int Idx){
+	/* Menambahkan index bangunan pada tab ke list milik player */
 	InsVLast(&L(*P), Idx);
 }
 
 void DelIdxBangunan(Player *P, int Idx){
+	/* Membuang index bangunan pada tab dalam list milik player */
 	DelP(&L(*P), Idx);
 }
 
 void UpdateLBangunan(Player *P, TabBangunan T){
+	/* Mengupdate list bangunan milik player sesuai bangunan pada tabel */
 	int i;
 
 	LCreateEmpty(&L(*P));
@@ -47,6 +51,7 @@ void UpdateLBangunan(Player *P, TabBangunan T){
 }
 
 void UpdatePasukan(TabBangunan *T, Player P){
+	/* Mengupdate pasukan milik player P pada awal giliran */
 	int i;
 
 	for(i=GetFirstIdx(*T);i<=(GetLastIdx(*T));i++){
@@ -59,6 +64,7 @@ void UpdatePasukan(TabBangunan *T, Player P){
 }
 
 void ResetAttackMove(TabBangunan *T){
+	/* Me-reset semua hasAttacked dan hasMoved pada awal giliran */
 	int i;
 
 	for(i=GetFirstIdx(*T);i<=(GetLastIdx(*T));i++){
@@ -68,6 +74,7 @@ void ResetAttackMove(TabBangunan *T){
 }
 
 void IdxFromDaftarBangunan(Player P, TabBangunan T, int *idx, char *PesanDaftar, char *PesanInput){
+	/* Memberikan pilihan bangunan dari setiap bangunan dalam list */
 	int choice;
 
 	if(!IsLEmpty(L(P))){
@@ -92,14 +99,15 @@ void IdxFromDaftarBangunan(Player P, TabBangunan T, int *idx, char *PesanDaftar,
 }
 
 void IdxFromAdjacentBangunan(int indeksInput, Player P, TabBangunan T, int *idx, char *PesanDaftar, char *PesanInput, boolean self, Graph G){
-	// jika self=true, bangunan milik sendiri
+	/* 	Memberikan pilihan bangunan yang terhubung dengan bangunan ke-indeksInput dalam list
+		Jika self=true, bangunan milik sendiri, jika false milik 0 atau player lawan */
 	int choice;
 	List tmp;
 	Bangunan tmpBangunan;
 	int i;
-	// find adj put in list
+
+	// Membuat list untuk menampung semua bangunan yang terhubung
 	LCreateEmpty(&tmp);
-	// loop all tab
 	for(i=1; i<=TabNbElmt(T); i++){
 		tmpBangunan = TabElmt(T, i);
 		if(self){
@@ -113,7 +121,8 @@ void IdxFromAdjacentBangunan(int indeksInput, Player P, TabBangunan T, int *idx,
 			}
 		}
 	}
-	// list terisi semua yg adjacent dgn bangunan T[indeksInput]
+
+	// List terisi semua yg adjacent dgn bangunan T[indeksInput]
 	if(!IsLEmpty(tmp)){
 		printf("%s:\n", PesanDaftar);
 	
@@ -137,6 +146,7 @@ void IdxFromAdjacentBangunan(int indeksInput, Player P, TabBangunan T, int *idx,
 }
 
 void DoLevelUp(int idx, TabBangunan T, Stack *S, Player PCurrent, Player PEnemy){
+	/* Melakukan level up pada bangunan ke idx dalam tabel */
 	Bangunan *B;
 	B = &TabElmt(T, idx);
 
@@ -152,7 +162,7 @@ void DoLevelUp(int idx, TabBangunan T, Stack *S, Player PCurrent, Player PEnemy)
 		printf("-mu meningkat menjadi %d!\n", Lvl(*B));
 	}
 	else{
-		printf("GABISA LEVELUP KAKA :((((\n");
+		printf("Syarat level-up belum memenuhi.\n");
 	}
 	printf("\n");
 }
@@ -301,8 +311,7 @@ void DoAttack(int idxB1, int idxB2, Player *PCurrent, Player *PEnemy, TabBanguna
 }
 
 void DoMove(int idxB1, int idxB2, TabBangunan T, Stack *S, Player PCurrent, Player PEnemy){
-
-	// pasukan B1 bergerak ke B2
+	/* Pasukan pada bangunan ke-idxB1 berpindah ke bangunan ke-idxB2 dalam tabel */
 	int N;
 	Bangunan *B1 = &TabElmt(T, idxB1);
 	Bangunan *B2 = &TabElmt(T, idxB2);
@@ -332,6 +341,8 @@ void DoMove(int idxB1, int idxB2, TabBangunan T, Stack *S, Player PCurrent, Play
 }
 
 void DoSkill(Player *PCurrent, Player *PEnemy, TabBangunan *T, boolean *ExtraTurn){
+	/* Menggunakan skill terdepan pada Queue milik PCurrent */
+
 	int Skill;
 	Bangunan* tmpB;
 	int i;
@@ -412,6 +423,7 @@ void DoSkill(Player *PCurrent, Player *PEnemy, TabBangunan *T, boolean *ExtraTur
 }
 
 boolean IsSkill6(Player P, TabBangunan T) {
+	/* Mengecek apakah kondisi untuk Skill6 terpenuhi */
 	int i;
 	Bangunan tmpB;
 	boolean cek;
@@ -427,10 +439,12 @@ boolean IsSkill6(Player P, TabBangunan T) {
 }
 
 boolean isGameOver(Player PEnemy){
+	/* Mengecek apakah game sudah berakhir dan dimenangkan salah satu pemain */
 	return (NbElmt(L(PEnemy)) == 0);
 }
 
 void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta, Graph G){
+	/* Melakukan satu giliran PCurrent */
 	int idx;
 	int idx2;
 	int i;
@@ -604,10 +618,15 @@ void TakeTurn(Player *PCurrent, Player *PEnemy, TabBangunan *T, MATRIKS Peta, Gr
 		printf("ByeBye!\n");
 	}
 	else if(!is_cont){
-		// MUNGKIN NANTI BISA DIUBAH
 		printf("\n\n");
-		printf("PLAYER "); printf("%d", Kode(*PCurrent)); printf(" WIN\n");
-		printf("PLAYER "); printf("%d", Kode(*PEnemy)); printf(" LOSE\n");
+		printf("\x1b[1m");
+		printf("          .------------------------------------------.\n");
+		printf("          |                                          |\n");
+		printf("          |           -: PLAYER "); printf("%d", Kode(*PCurrent)); printf(" WIN  :-            |\n");
+		printf("          |           -: PLAYER "); printf("%d", Kode(*PEnemy)); printf(" LOSE :-            |\n");
+		printf("          |                                          |\n");
+		printf("          '------------------------------------------'\n");
+		printf("\x1b[0m");
 		printf("\n\n");
 	}
 }
