@@ -5,10 +5,15 @@
 #include <stdlib.h>
 
 int main(){
-	// Stack S;
-    // infostack X;
-    // infostack Y;
+	Stack S;
+    infostack X;
+    infostack Y;
 
+
+    SCreateEmpty(&S);
+
+    
+    
     // // define dummy infostack X
     // // void MakeBangunan(Bangunan *B, int Tipe, int X, int Y);
 
@@ -18,21 +23,42 @@ int main(){
 
 
 
-	// SCreateEmpty(&Q,2);
-	// printf("isEmpty? : %d\n", IsSEmpty(Q));
+	SCreateEmpty(&S);
+	printf("isSEmpty? : %d\n", IsSEmpty(S));
+    MakeBangunan(&B(X), 1, 1, 1);
+    Idx(X) = 1;
+    QCreateEmpty(&Qu(Y), 5);
+    MakeBangunan(&B(Y), 1, 1, 1);
+    Idx(X) = 2;
+    QCreateEmpty(&Qu(Y), 5);
 
-	// printf("Push 1, ");
-	// Push(&S, 1);
-    // printf("Add 2, ");
-	// Push(&S, 2);
-	// printf("\n");
-    // printf("isFull? : %d\n", IsSFull(Q));
-    // printf("QNBElmt? : %d\n", QNBElmt(Q));
 
-    // int X;
-    // Del (&Q, &X);
-    // printf("Del? : %d\n", X);
-    // Del (&Q, &X);
-    // printf("Del? : %d\n", X);
+
+	printf("Push 1, ");
+	Push(&S, X);
+    printf("Push 2 (199x), ");
+    for(int i = 1; i <=199; i++)
+    {
+        Push(&S, Y);
+    }
+    printf("\n");
+    printf("isFull? : %d\n", IsSFull(S));
+    
+    infostack dummy;
+    Pop(&S, &dummy);
+    printf("indeks stack Pop : %d\n", Idx(dummy));
+    PushUndef(&S);
+    Pop(&S, &dummy);
+    printf("indeks stack Pop Undef : %d\n", Idx(dummy));
+
+    Bangunan Z;
+    PushBangunan(&S, Z, 3);
+    PopBangunan(&S, &Z,&Idx(dummy));
+    printf("Tipe PopBangunan : %d\n", Tipe(Z));
+
+    PushQ (&S, Qu(Y));
+    PopQ (&S, &Qu(dummy));
+    printf("PopQ in Qu? : %d\n", IsQEmpty(Qu(dummy)));
+
     return 0;
 }
