@@ -23,36 +23,36 @@ int main() {
     int X;
     int Y;
     char c;
+    int choice;
     int Lvl;
     Bangunan B;
     IdxType i;
     menu();
     while(1) {
         printf("\n> ");
-        scanf("%d", &c);
-        switch(c) {
+        scanf("%d", &choice);
+        switch(choice) {
             case 1: {
                 printf("Mengirimkan karakter simbol yang merepresentasikan bangunan B sesuai tipe:\n1: Castle (C)\n2: Tower (T)\n3: Fort (F)\n4: Village (V)\n");
                 scanf("%d", &Tipe);
-                scanf("%d", &X);
-                scanf("%d", &Y);
-                MakeBangunan(&B, Tipe, X, Y);
+                MakeBangunan(&B, Tipe, 0, 0);
                 printf("\n Symbol: %c\n", Symbol(B));
                 printf("\n");
                 break;
             }
             case 2: {
                 printf("Mengirim tipe karakter sesuai tipe:\n1: Castle (C)\n2: Tower (T)\n3: Fort (F)\n4: Village (V)\n");
+                getchar();
                 scanf("%c", &c);
-                printf("\nCharToTipe: %c\n", CharToTipe(c));
+                printf("\nCharToTipe: %d\n", CharToTipe(c));
                 printf("\n");
                 break;
             }
             case 3: {
-                printf("Atribut B terprint di layar\n");
-                scanf("%d", &Tipe);
-                scanf("%d", &X);
-                scanf("%d", &Y);
+                printf("Atribut B terprint di layar (Bangunan sederhana)\n");
+                printf("Tipe (1-4): "); scanf("%d", &Tipe);
+                printf("koordinat X: "); scanf("%d", &X);
+                printf("koordinat Y: "); scanf("%d", &Y);
                 MakeBangunan(&B, Tipe, X, Y);
                 PrintBangunan(B);
                 printf("\n");
@@ -60,9 +60,9 @@ int main() {
             }
             case 4: {
                 printf("Mengirimkan true jika bangunan B adalah BUndef\n");
-                scanf("%d", &Tipe);
-                scanf("%d", &X);
-                scanf("%d", &Y);
+                printf("Tipe (1-4): "); scanf("%d", &Tipe);
+                printf("koordinat X: "); scanf("%d", &X);
+                printf("koordinat Y: "); scanf("%d", &Y);
                 MakeBangunan(&B, Tipe, X, Y);
                 printf("\nIsBUndef: %d\n", IsBUndef(B));
                 printf("\n");
@@ -70,9 +70,9 @@ int main() {
             }
             case 5: {
                 printf("Mengembalikan apakah level bangunan B dapat dinaikkan\n");
-                scanf("%d", &Tipe);
-                scanf("%d", &X);
-                scanf("%d", &Y);
+                printf("Tipe (1-4): "); scanf("%d", &Tipe);
+                printf("koordinat X: "); scanf("%d", &X);
+                printf("koordinat Y: "); scanf("%d", &Y);
                 MakeBangunan(&B, Tipe, X, Y);
                 printf("\nCheckLevelUp: %d\n", CheckLevelUp(B));
                 printf("\n");
@@ -80,9 +80,9 @@ int main() {
             }
             case 6: {
                 printf("Menaikkan level bangunan B, pasukan pada bangunan B berkurang sebesar M/2, lalu mencetak atribut bangunan B ke layar.");
-                scanf("%d", &Tipe);
-                scanf("%d", &X);
-                scanf("%d", &Y);
+                printf("Tipe (1-4): "); scanf("%d", &Tipe);
+                printf("koordinat X: "); scanf("%d", &X);
+                printf("koordinat Y: "); scanf("%d", &Y);
                 MakeBangunan(&B, Tipe, X, Y);
                 LevelUp(&B);
                 PrintBangunan(B);
@@ -91,10 +91,10 @@ int main() {
             }
             case 7: {
                 printf("Mengupdate bangunan menjadi level Lvl sesuai spesifikasi, lalu mencetak atribut bangunan B ke layar\n");
-                scanf("%d", &Tipe);
-                scanf("%d", &X);
-                scanf("%d", &Y);
-                scanf("%d", &Lvl);
+                printf("Tipe (1-4): "); scanf("%d", &Tipe);
+                printf("koordinat X: "); scanf("%d", &X);
+                printf("koordinat Y: "); scanf("%d", &Y);
+                printf("Naik level: "); scanf("%d", &Lvl);
                 MakeBangunan(&B, Tipe, X, Y);
                 UpdateToLevel(&B, Lvl);
                 PrintBangunan(B);
@@ -104,18 +104,14 @@ int main() {
             case 8: {
                 printf("Mencetak nama bangunan B sesuai tipe:\n1: Castle (C)\n2: Tower (T)\n3: Fort (F)\n4: Village (V)\n");
                 scanf("%d", &Tipe);
-                scanf("%d", &X);
-                scanf("%d", &Y);
-                MakeBangunan(&B, Tipe, X, Y);
+                MakeBangunan(&B, Tipe, 0, 0);
                 PrintNama(B);
                 break;
             }
             case 9: {
                 printf("Mencetak nama bangunan B sesuai tipe dgn warna:\n1: Castle (C)\n2: Tower (T)\n3: Fort (F)\n4: Village (V)\n");
                 scanf("%d", &Tipe);
-                scanf("%d", &X);
-                scanf("%d", &Y);
-                MakeBangunan(&B, Tipe, X, Y);
+                MakeBangunan(&B, Tipe, 0, 0);
                 PrintSymbolColor(B);
                 break;
             }
