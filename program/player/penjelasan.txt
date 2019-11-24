@@ -1,0 +1,1 @@
+Untuk ADT ini tidak dibuat driver karena ADT ini banyak termasuk ke dalam program utama dan keberjalanan permainan.
