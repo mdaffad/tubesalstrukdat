@@ -1,0 +1,9 @@
+untuk program utama:
+dari path utama,
+gcc */*.c main.c -o main
+
+untuk driver tiap adt:
+dari path tiap driver,
+gcc ../arraydinpos/*.c ../bangunan/*.c ../graf/*.c ../listlinier/*.c ../matrikskar/*.c ../mesinkar/*.c ../mesinkata/*.c ../pcolor/*.c ../player/*.c ../point/*.c ../queue/*.c ../skill/*.c ../stackt/*.c ./driver/*.c -o drive
+
+*untuk ADT Player karena masuk ke program utama tidak dibuat drivernya.
