@@ -8,28 +8,14 @@ int main(){
 	Stack S;
     infostack X;
     infostack Y;
-
-
-    SCreateEmpty(&S);
-
     
-    
-    // // define dummy infostack X
-    // // void MakeBangunan(Bangunan *B, int Tipe, int X, int Y);
-
-    // Bangunan B;
-    // MakeBangunan(&B, 1, 2, 0);
-
-
-
-
 	SCreateEmpty(&S);
 	printf("isSEmpty? : %d\n", IsSEmpty(S));
     MakeBangunan(&B(X), 1, 1, 1);
     Idx(X) = 1;
     QCreateEmpty(&Qu(Y), 5);
     MakeBangunan(&B(Y), 1, 1, 1);
-    Idx(X) = 2;
+    Idx(Y) = 2;
     QCreateEmpty(&Qu(Y), 5);
 
 
@@ -52,6 +38,7 @@ int main(){
     printf("indeks stack Pop Undef : %d\n", Idx(dummy));
 
     Bangunan Z;
+    MakeBangunan(&Z,2,3,3);
     PushBangunan(&S, Z, 3);
     PopBangunan(&S, &Z,&Idx(dummy));
     printf("Tipe PopBangunan : %d\n", Tipe(Z));
