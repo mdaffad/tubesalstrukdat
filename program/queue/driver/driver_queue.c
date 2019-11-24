@@ -23,5 +23,11 @@ int main(){
     printf("Del? : %d\n", X);
     Del (&Q, &X);
     printf("Del? : %d\n", X);
+    printf("Dealokasi : ");
+    QDeAlokasi(&Q);
+    if(QMaxEl(Q) == 0)
+    {
+        printf("Terdealokasi\n");
+    }
     return 0;
 }
